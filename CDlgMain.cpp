@@ -9,9 +9,11 @@ CDlgMain::CDlgMain(QWidget *parent)
     ui->setupUi(this);
 
     mpTh1 = std::make_unique<CTh1>();
+    mpThMktUpbit = std::make_unique<CThMktUpbit>();
 
     QObject::connect(this, SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpTh1.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
+    QObject::connect(mpThMktUpbit.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
 
 
     mpTh1->start();
@@ -25,7 +27,8 @@ CDlgMain::~CDlgMain()
 
 void CDlgMain::slotBtnStart(void)
 {
-    emit sigLog1("Start!!");
+    emit sigLog1("Start DlgMain!!");
+    mpThMktUpbit->start();
 }
 
 void CDlgMain::slotBtnOrderClean(void)

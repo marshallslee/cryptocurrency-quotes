@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "CTh1.h"
+#include "CThMktUpbit.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class CDlgMain; }
@@ -41,6 +42,7 @@ public slots:
 public:
     //CTh1 th1; // stack instance
     std::unique_ptr<CTh1> mpTh1;
+    std::unique_ptr<CThMktUpbit> mpThMktUpbit;
 
 };
 #endif // CDLGMAIN_H

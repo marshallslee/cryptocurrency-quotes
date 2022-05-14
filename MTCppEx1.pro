@@ -1,4 +1,4 @@
-QT       += core gui concurrent
+QT       += core gui concurrent websockets network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,12 +10,15 @@ CONFIG += c++2a
 
 SOURCES += \
     CTh1.cpp \
+    CThMktUpbit.cpp \
     main.cpp \
     CDlgMain.cpp
 
 HEADERS += \
     CDlgMain.h \
-    CTh1.h
+    CTh1.h \
+    CThMktUpbit.h \
+    Variables.h
 
 FORMS += \
     CDlgMain.ui

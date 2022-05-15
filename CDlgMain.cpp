@@ -55,6 +55,7 @@ void CDlgMain::slotBtnOrderShop(void)
 
 void CDlgMain::slotLog1(QString iStr)
 {
+    ui->teLog1->moveCursor(QTextCursor::End);
     ui->teLog1->insertPlainText(iStr + "\n");
 
     ui->teLog1->moveCursor(QTextCursor::End);

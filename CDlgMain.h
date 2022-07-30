@@ -29,6 +29,7 @@ private:
 
 signals:
     void sigLog1(QString);
+    void sigTextLabel(QString);
 
 private slots:
     void slotBtnStart(void);
@@ -38,6 +39,7 @@ private slots:
 
 public slots:
     void slotLog1(QString iStr);
+    void slotPrice(QString price);
 
 public:
     //CTh1 th1; // stack instance

@@ -15,6 +15,8 @@ CDlgMain::CDlgMain(QWidget *parent)
     QObject::connect(mpTh1.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
 
+    QObject::connect(this, SIGNAL(sigTextLabel(QString)), this, SLOT(slotPrice(QString)), Qt::QueuedConnection);
+    QObject::connect(mpThMktUpbit.get(), SIGNAL(sigTextLabel(QString)), this, SLOT(slotPrice(QString)), Qt::QueuedConnection);
 
     mpTh1->start();
 }
@@ -51,6 +53,10 @@ void CDlgMain::slotBtnOrderWash(void)
 void CDlgMain::slotBtnOrderShop(void)
 {
     mpTh1->CallBack_SetOrderClean(static_cast<int32_t>(OrderToThread::Shop));
+}
+
+void CDlgMain::slotPrice(QString price) {
+    ui->txPrice->setText(price);
 }
 
 void CDlgMain::slotLog1(QString iStr)

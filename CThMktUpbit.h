@@ -3,6 +3,8 @@
 
 #include "Variables.h"
 
+using namespace std;
+
 enum class UpbitStatus_en
 {
     Init = 0,
@@ -22,6 +24,7 @@ protected:
 
 signals:
     void sigLog1(QString);
+    void sigTextLabel(QString);
     // Mkt API
     void sigGETPairAll();
     // to WS

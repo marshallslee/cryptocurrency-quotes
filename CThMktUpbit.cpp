@@ -1,5 +1,7 @@
 #include "CThMktUpbit.h"
 
+using namespace std;
+
 CThMktUpbit::CThMktUpbit()
 {
     mWS_Url = "wss://api.upbit.com/websocket/v1";
@@ -200,6 +202,10 @@ void CThMktUpbit::onDisconnected(void)
 
 void CThMktUpbit::onTextMessageReceived(QString imessage)
 {
+    auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
+    if (json_doc.object()["cd"].toString() == "KRW-BTC") {
+        emit sigTextLabel(imessage);
+    }
     if (imessage.indexOf("orderbook") > 0)
     {
         ++mCntObu;
@@ -211,6 +217,7 @@ void CThMktUpbit::onTextMessageReceived(QString imessage)
         auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
         if (json_doc.object()["cd"].toString() == "KRW-BTC")
         {
+            emit sigLog1(currentPrice);
             emit sigLog1(tr("BTC/KRW CurPrice = %1, TrdVol = %2")
                          .arg(json_doc.object()["tp"].toVariant().toString())
                          .arg(json_doc.object()["tv"].toVariant().toString()));

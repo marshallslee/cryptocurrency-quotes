@@ -1,5 +1,6 @@
 #include "CDlgMain.h"
 #include "ui_CDlgMain.h"
+#include <QTableWidgetItem>
 
 // Constructor
 CDlgMain::CDlgMain(QWidget *parent)
@@ -17,6 +18,33 @@ CDlgMain::CDlgMain(QWidget *parent)
 
     QObject::connect(this, SIGNAL(sigTextLabel(QString)), this, SLOT(slotPrice(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigTextLabel(QString)), this, SLOT(slotPrice(QString)), Qt::QueuedConnection);
+
+    ui->tPrice->setColumnCount(5);
+    ui->tPrice->setRowCount(30);
+    ui->tPrice->setColumnWidth(0, 0);
+    ui->tPrice->setColumnWidth(1, 160);
+    ui->tPrice->setColumnWidth(2, 160);
+    ui->tPrice->setColumnWidth(3, 160);
+    ui->tPrice->setColumnWidth(4, 160);
+
+    QTableWidgetItem *askPriceTitleItem = new QTableWidgetItem;
+    askPriceTitleItem->setText("매도 호가");
+    ui->tPrice->setItem(0, 1, askPriceTitleItem);
+
+    QTableWidgetItem *askSizeTitleItem = new QTableWidgetItem;
+    askSizeTitleItem->setText("매도 잔량");
+    ui->tPrice->setItem(0, 2, askSizeTitleItem);
+
+    QTableWidgetItem *bidPriceTitleItem = new QTableWidgetItem;
+    bidPriceTitleItem->setText("매수 호가");
+    ui->tPrice->setItem(0, 3, bidPriceTitleItem);
+
+    QTableWidgetItem *bidSizeTitleItem = new QTableWidgetItem;
+    bidSizeTitleItem->setText("매수 잔량");
+    ui->tPrice->setItem(0, 4, bidSizeTitleItem);
+
+    ui->tPrice->horizontalHeader()->setVisible(false);
+    ui->tPrice->verticalHeader()->setVisible(false);
 
     mpTh1->start();
 }
@@ -56,7 +84,38 @@ void CDlgMain::slotBtnOrderShop(void)
 }
 
 void CDlgMain::slotPrice(QString price) {
-    ui->txPrice->setText(price);
+    auto json_doc = QJsonDocument::fromJson(price.toUtf8());
+
+    QLocale locale(QLocale::English);
+
+    QJsonArray arr = json_doc.object()["obu"].toArray();
+    for(int i=0; i<arr.size(); i++) {
+        QJsonObject tempItem = arr[i].toObject();
+        auto ask_price = tempItem["ap"].toDouble();
+        auto ask_size = tempItem["as"].toDouble();
+        auto bid_price = tempItem["bp"].toDouble();
+        auto bid_size = tempItem["bs"].toDouble();
+
+        QTableWidgetItem *askPriceItem = new QTableWidgetItem;
+        QString strAskPrice = locale.toString(ask_price, 'f', 0);
+        askPriceItem->setText(strAskPrice);
+        ui->tPrice->setItem(i+1, 1, askPriceItem);
+
+        QTableWidgetItem *askSizeItem = new QTableWidgetItem;
+        QString strAskSize = locale.toString(ask_size, 'f');
+        askSizeItem->setText(strAskSize);
+        ui->tPrice->setItem(i+1, 2, askSizeItem);
+
+        QTableWidgetItem *bidPriceItem = new QTableWidgetItem;
+        QString strBidPrice = locale.toString(bid_price, 'f', 0);
+        bidPriceItem->setText(strBidPrice);
+        ui->tPrice->setItem(i+1, 3, bidPriceItem);
+
+        QTableWidgetItem *bidSizeItem = new QTableWidgetItem;
+        QString strBidSize = locale.toString(bid_size, 'f');
+        bidSizeItem->setText(strBidSize);
+        ui->tPrice->setItem(i+1, 4, bidSizeItem);
+    }
 }
 
 void CDlgMain::slotLog1(QString iStr)

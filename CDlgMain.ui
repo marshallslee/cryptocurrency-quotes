@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1010</width>
-    <height>561</height>
+    <width>1171</width>
+    <height>776</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,22 +32,19 @@
      <rect>
       <x>130</x>
       <y>10</y>
-      <width>841</width>
-      <height>431</height>
+      <width>301</width>
+      <height>641</height>
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="txPrice">
+   <widget class="QTableWidget" name="tPrice">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>450</y>
-      <width>981</width>
-      <height>61</height>
+      <x>440</x>
+      <y>10</y>
+      <width>681</width>
+      <height>641</height>
      </rect>
-    </property>
-    <property name="text">
-     <string/>
     </property>
    </widget>
   </widget>
@@ -56,7 +53,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1010</width>
+     <width>1171</width>
      <height>22</height>
     </rect>
    </property>

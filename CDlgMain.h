@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "CTh1.h"
 #include "CThMktUpbit.h"
+#include "CThMktBinance.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class CDlgMain; }
@@ -29,7 +30,8 @@ private:
 
 signals:
     void sigLog1(QString);
-    void sigTextLabel(QString);
+    void sigUpbitTextLabel(QString);
+    void sigBinanceTextLabel(QString);
 
 private slots:
     void slotBtnStart(void);
@@ -39,12 +41,14 @@ private slots:
 
 public slots:
     void slotLog1(QString iStr);
-    void slotPrice(QString price);
+    void upbitBTCPrice(QString price);
+    void binanceBTCPrice(QString price);
 
 public:
     //CTh1 th1; // stack instance
     std::unique_ptr<CTh1> mpTh1;
     std::unique_ptr<CThMktUpbit> mpThMktUpbit;
+    std::unique_ptr<CThMktBinance> mpThMktBinance;
 
 };
 #endif // CDLGMAIN_H

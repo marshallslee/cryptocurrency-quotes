@@ -1,53 +1,49 @@
-#ifndef CTHMKTUPBIT_H
-#define CTHMKTUPBIT_H
+#ifndef CTHMKTBINANCE_H
+#define CTHMKTBINANCE_H
 
 #include "Variables.h"
 
 using namespace std;
 
-enum class UpbitStatus_en
+enum class BinanceStatus_en
 {
     Init = 0,
     WaitForMktPairs,
     Ready,
 };
 
-class CThMktUpbit : public QThread
+class CThMktBinance : public QThread
 {
     Q_OBJECT
 public:
-    CThMktUpbit();
-    ~CThMktUpbit();
+    CThMktBinance();
+    ~CThMktBinance();
 
 protected:
     void run();
 
+private:
+    bool mbGotPairList = false;
+
 signals:
     void sigLog1(QString);
-    void sigUpbitTextLabel(QString);
-    // Mkt API
-    void sigGETPairAll();
-    // to WS
+    void sigBinanceTextLabel(QString);
+
     void sigConnectWS();
 
 public slots:
-    void slotTimer500mSec(void);
+//    void slotTimer500mSec(void);
 
     // Mkt API
-    void getPairAll(void);
+//    void getPairAll(void);
 
     // to WS
     void connectWS(void);
 
 private:
-    UpbitStatus_en mUpbitStatus = UpbitStatus_en::Init;
-    UpbitStatus_en GetStatusUpbit(void);
-    bool SetStatusUpbit(UpbitStatus_en iStatus);
-
-private:
-    QString mUrlV1 = "https://api.upbit.com/v1/";
-    bool mbGotPairList = false;
-    bool mbVerifyUntrnsOrder;
+    BinanceStatus_en mBinanceStatus = BinanceStatus_en::Init;
+    BinanceStatus_en GetStatusBinance(void);
+    bool SetStatusBinance(BinanceStatus_en iStatus);
 
 private: // Data Set
     std::unordered_map<QString, TradingPair_st> mUpbitPairs_um;
@@ -58,8 +54,8 @@ private: // Timer
     int32_t mCountTimer = 0;
 
 public: // WebSocket
-    QUrl mWS_Url;
-    QWebSocket mWS;
+    QUrl mBinanceWS_Url;
+    QWebSocket mBinanceWS;
     int64_t mCntObu = 0, mCntTrade = 0, mCntTicker = 0;
     bool mbStartCnt = false;
 
@@ -72,4 +68,4 @@ public: // WebSocket
     QString generateUUID(void);
 };
 
-#endif // CTHMKTUPBIT_H
+#endif // CTHMKTBINANCE_H

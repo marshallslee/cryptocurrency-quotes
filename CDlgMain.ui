@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1171</width>
-    <height>776</height>
+    <width>1235</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -31,20 +31,56 @@
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>10</y>
+      <y>30</y>
       <width>301</width>
       <height>641</height>
      </rect>
     </property>
    </widget>
-   <widget class="QTableWidget" name="tPrice">
+   <widget class="QTableWidget" name="tUpbitPrice">
     <property name="geometry">
      <rect>
       <x>440</x>
-      <y>10</y>
-      <width>681</width>
+      <y>30</y>
+      <width>381</width>
       <height>641</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="tBinancePrice">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>30</y>
+      <width>391</width>
+      <height>641</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>10</y>
+      <width>67</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>업비트</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>990</x>
+      <y>10</y>
+      <width>67</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>바이낸스</string>
     </property>
    </widget>
   </widget>
@@ -53,7 +89,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1171</width>
+     <width>1235</width>
      <height>22</height>
     </rect>
    </property>

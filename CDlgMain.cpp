@@ -15,7 +15,6 @@ CDlgMain::CDlgMain(QWidget *parent)
     mpThMktBinanceFutures = std::make_unique<CThMktBinanceFutures>();
 
     QObject::connect(this, SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
-    QObject::connect(mpTh1.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog(QString)), Qt::QueuedConnection);
@@ -52,7 +51,6 @@ CDlgMain::CDlgMain(QWidget *parent)
     QObject::connect(this, SIGNAL(sigBinanceTextLabel(QString)), this, SLOT(binanceBTCPrice(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigBinanceTextLabel(QString)), this, SLOT(binanceBTCPrice(QString)), Qt::QueuedConnection);
 
-
     ui->tBinancePrice->horizontalHeader()->setVisible(false);
     ui->tBinancePrice->verticalHeader()->setVisible(false);
     ui->tBinancePrice->setColumnCount(5);
@@ -81,7 +79,6 @@ CDlgMain::CDlgMain(QWidget *parent)
 
     QObject::connect(this, SIGNAL(sigBinanceFuturesTextLabel(QString)), this, SLOT(binanceFuturesBTCPrice(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigBinanceFuturesTextLabel(QString)), this, SLOT(binanceFuturesBTCPrice(QString)), Qt::QueuedConnection);
-
 
     ui->tBinanceFuturesPrice->horizontalHeader()->setVisible(false);
     ui->tBinanceFuturesPrice->verticalHeader()->setVisible(false);
@@ -123,28 +120,6 @@ void CDlgMain::slotBtnStart(void)
     mpThMktUpbit->start();
     mpThMktBinance->start();
     mpThMktBinanceFutures->start();
-}
-
-void CDlgMain::slotBtnOrderClean(void)
-{
-    // Clean 작업!! - 왜 안되나요?
-    // 작업중
-    // 작업중 - 10분 걸림
-    //for loop
-    // step 1 - work thread
-
-    // Thread 간 통신
-    mpTh1->CallBack_SetOrderClean(static_cast<int32_t>(OrderToThread::Clean));
-}
-
-void CDlgMain::slotBtnOrderWash(void)
-{
-    mpTh1->CallBack_SetOrderClean(static_cast<int32_t>(OrderToThread::Wash));
-}
-
-void CDlgMain::slotBtnOrderShop(void)
-{
-    mpTh1->CallBack_SetOrderClean(static_cast<int32_t>(OrderToThread::Shop));
 }
 
 void CDlgMain::upbitBTCPrice(QString price) {

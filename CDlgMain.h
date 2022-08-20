@@ -2,7 +2,6 @@
 #define CDLGMAIN_H
 
 #include <QMainWindow>
-#include "CTh1.h"
 #include "CThMktUpbit.h"
 #include "CThMktBinance.h"
 #include "CThMktBinanceFutures.h"
@@ -37,9 +36,6 @@ signals:
 
 private slots:
     void slotBtnStart(void);
-    void slotBtnOrderClean(void);
-    void slotBtnOrderWash(void);
-    void slotBtnOrderShop(void);
 
 public slots:
     void slotLog1(QString iStr);
@@ -49,7 +45,6 @@ public slots:
 
 public:
     //CTh1 th1; // stack instance
-    std::unique_ptr<CTh1> mpTh1;
     std::unique_ptr<CThMktUpbit> mpThMktUpbit;
     std::unique_ptr<CThMktBinance> mpThMktBinance;
     std::unique_ptr<CThMktBinanceFutures> mpThMktBinanceFutures;

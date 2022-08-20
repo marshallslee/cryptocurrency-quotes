@@ -9,7 +9,6 @@ CONFIG += c++2a
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    CTh1.cpp \
     CThMktBinance.cpp \
     CThMktBinanceFutures.cpp \
     CThMktUpbit.cpp \
@@ -18,7 +17,6 @@ SOURCES += \
 
 HEADERS += \
     CDlgMain.h \
-    CTh1.h \
     CThMktBinance.h \
     CThMktBinanceFutures.h \
     CThMktUpbit.h \

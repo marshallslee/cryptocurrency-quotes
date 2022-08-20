@@ -11,6 +11,7 @@ CONFIG += c++2a
 SOURCES += \
     CTh1.cpp \
     CThMktBinance.cpp \
+    CThMktBinanceFutures.cpp \
     CThMktUpbit.cpp \
     main.cpp \
     CDlgMain.cpp
@@ -19,6 +20,7 @@ HEADERS += \
     CDlgMain.h \
     CTh1.h \
     CThMktBinance.h \
+    CThMktBinanceFutures.h \
     CThMktUpbit.h \
     Variables.h
 

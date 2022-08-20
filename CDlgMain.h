@@ -5,6 +5,7 @@
 #include "CTh1.h"
 #include "CThMktUpbit.h"
 #include "CThMktBinance.h"
+#include "CThMktBinanceFutures.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class CDlgMain; }
@@ -32,6 +33,7 @@ signals:
     void sigLog1(QString);
     void sigUpbitTextLabel(QString);
     void sigBinanceTextLabel(QString);
+    void sigBinanceFuturesTextLabel(QString);
 
 private slots:
     void slotBtnStart(void);
@@ -43,12 +45,13 @@ public slots:
     void slotLog1(QString iStr);
     void upbitBTCPrice(QString price);
     void binanceBTCPrice(QString price);
+    void binanceFuturesBTCPrice(QString price);
 
 public:
     //CTh1 th1; // stack instance
     std::unique_ptr<CTh1> mpTh1;
     std::unique_ptr<CThMktUpbit> mpThMktUpbit;
     std::unique_ptr<CThMktBinance> mpThMktBinance;
-
+    std::unique_ptr<CThMktBinanceFutures> mpThMktBinanceFutures;
 };
 #endif // CDLGMAIN_H

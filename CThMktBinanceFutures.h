@@ -1,30 +1,30 @@
-#ifndef CTHMKTBINANCE_H
-#define CTHMKTBINANCE_H
+#ifndef CTHMKTBINANCEFUTURES_H
+#define CTHMKTBINANCEFUTURES_H
 
 #include "Variables.h"
 
 using namespace std;
 
-enum class BinanceStatus_en
+enum class BinanceFuturesStatus_en
 {
     Init = 0,
     WaitForMktPairs,
     Ready,
 };
 
-class CThMktBinance : public QThread
+class CThMktBinanceFutures : public QThread
 {
     Q_OBJECT
 public:
-    CThMktBinance();
-    ~CThMktBinance();
+    CThMktBinanceFutures();
+    ~CThMktBinanceFutures();
 
 protected:
     void run();
 
 signals:
     void sigLog1(QString);
-    void sigBinanceTextLabel(QString);
+    void sigBinanceFuturesTextLabel(QString);
     void sigConnectWS();
 
 public slots:
@@ -34,17 +34,17 @@ public slots:
     void connectWS(void);
 
 private:
-    BinanceStatus_en mBinanceStatus = BinanceStatus_en::Init;
-    BinanceStatus_en GetStatusBinance(void);
-    bool SetStatusBinance(BinanceStatus_en iStatus);
+    BinanceFuturesStatus_en mBinanceFuturesStatus = BinanceFuturesStatus_en::Init;
+    BinanceFuturesStatus_en GetStatusBinanceFutures(void);
+    bool SetStatusBinanceFutures(BinanceFuturesStatus_en iStatus);
 
 private: // Timer
     std::unique_ptr<QTimer> mpTimer;
     int32_t mCountTimer = 0;
 
 public: // WebSocket
-    QUrl mBinanceWS_Url;
-    QWebSocket mBinanceWS;
+    QUrl mBinanceFuturesWS_Url;
+    QWebSocket mBinanceFuturesWS;
     int64_t mCntObu = 0, mCntTrade = 0, mCntTicker = 0;
     bool mbStartCnt = false;
 
@@ -54,4 +54,4 @@ public: // WebSocket
     void onPongReceived(quint64, const QByteArray&);
 };
 
-#endif // CTHMKTBINANCE_H
+#endif // CTHMKTBINANCEFUTURES_H

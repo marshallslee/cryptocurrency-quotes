@@ -90,21 +90,21 @@ CDlgMain::CDlgMain(QWidget *parent)
     ui->tBinanceFuturesPrice->setColumnWidth(3, 100);
     ui->tBinanceFuturesPrice->setColumnWidth(4, 100);
 
-    QTableWidgetItem *binanceFuturesAskPriceTitleItem = new QTableWidgetItem;
-    binanceFuturesAskPriceTitleItem->setText("매도 호가");
-    ui->tBinanceFuturesPrice->setItem(0, 1, binanceFuturesAskPriceTitleItem);
-
-    QTableWidgetItem *binanceFuturesAskSizeTitleItem = new QTableWidgetItem;
-    binanceFuturesAskSizeTitleItem->setText("매도 잔량");
-    ui->tBinanceFuturesPrice->setItem(0, 2, binanceFuturesAskSizeTitleItem);
-
     QTableWidgetItem *binanceFuturesBidPriceTitleItem = new QTableWidgetItem;
     binanceFuturesBidPriceTitleItem->setText("매수 호가");
-    ui->tBinanceFuturesPrice->setItem(0, 3, binanceFuturesBidPriceTitleItem);
+    ui->tBinanceFuturesPrice->setItem(0, 1, binanceFuturesBidPriceTitleItem);
 
     QTableWidgetItem *binanceFuturesBidSizeTitleItem = new QTableWidgetItem;
     binanceFuturesBidSizeTitleItem->setText("매수 잔량");
-    ui->tBinanceFuturesPrice->setItem(0, 4, binanceFuturesBidSizeTitleItem);
+    ui->tBinanceFuturesPrice->setItem(0, 2, binanceFuturesBidSizeTitleItem);
+
+    QTableWidgetItem *binanceFuturesAskPriceTitleItem = new QTableWidgetItem;
+    binanceFuturesAskPriceTitleItem->setText("매도 호가");
+    ui->tBinanceFuturesPrice->setItem(0, 3, binanceFuturesAskPriceTitleItem);
+
+    QTableWidgetItem *binanceFuturesAskSizeTitleItem = new QTableWidgetItem;
+    binanceFuturesAskSizeTitleItem->setText("매도 잔량");
+    ui->tBinanceFuturesPrice->setItem(0, 4, binanceFuturesAskSizeTitleItem);
 
 }
 

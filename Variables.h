@@ -14,6 +14,6 @@ struct TradingPair_st
     QString orgName;
 };
 
-
+typedef std::unordered_map<QString, TradingPair_st> Pairs_um;
 
 #endif // VARIABLES_H

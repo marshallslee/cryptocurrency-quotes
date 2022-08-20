@@ -44,7 +44,6 @@ public slots:
     void binanceFuturesBTCPrice(QString price);
 
 public:
-    //CTh1 th1; // stack instance
     std::unique_ptr<CThMktUpbit> mpThMktUpbit;
     std::unique_ptr<CThMktBinance> mpThMktBinance;
     std::unique_ptr<CThMktBinanceFutures> mpThMktBinanceFutures;

@@ -1,7 +1,9 @@
 #ifndef CTHMKTBINANCEFUTURES_H
 #define CTHMKTBINANCEFUTURES_H
-
-#include "Variables.h"
+#include <QThread>
+#include <QTimer>
+#include <QWebSocket>
+#include <QtNetwork>
 
 using namespace std;
 

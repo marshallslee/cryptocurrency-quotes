@@ -1,6 +1,5 @@
 #include "CDlgMain.h"
 #include "ui_CDlgMain.h"
-#include <QTableWidgetItem>
 
 using namespace std;
 
@@ -17,100 +16,150 @@ CDlgMain::CDlgMain(QWidget *parent)
     QObject::connect(this, SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
-    QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog(QString)), Qt::QueuedConnection);
+    QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
 
     QObject::connect(this, SIGNAL(sigUpbitTextLabel(QString)), this, SLOT(upbitBTCPrice(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigUpbitTextLabel(QString)), this, SLOT(upbitBTCPrice(QString)), Qt::QueuedConnection);
 
     ui->tUpbitPrice->horizontalHeader()->setVisible(false);
     ui->tUpbitPrice->verticalHeader()->setVisible(false);
-    ui->tUpbitPrice->setColumnCount(5);
+    ui->tUpbitPrice->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->tUpbitPrice->setColumnCount(4);
     ui->tUpbitPrice->setRowCount(30);
     ui->tUpbitPrice->setColumnWidth(0, 0);
-    ui->tUpbitPrice->setColumnWidth(1, 100);
-    ui->tUpbitPrice->setColumnWidth(2, 100);
-    ui->tUpbitPrice->setColumnWidth(3, 100);
-    ui->tUpbitPrice->setColumnWidth(4, 100);
-
-    QTableWidgetItem *upbitAskPriceTitleItem = new QTableWidgetItem;
-    upbitAskPriceTitleItem->setText("매도 호가");
-    ui->tUpbitPrice->setItem(0, 1, upbitAskPriceTitleItem);
-
-    QTableWidgetItem *upbitAskSizeTitleItem = new QTableWidgetItem;
-    upbitAskSizeTitleItem->setText("매도 잔량");
-    ui->tUpbitPrice->setItem(0, 2, upbitAskSizeTitleItem);
-
-    QTableWidgetItem *upbitBidPriceTitleItem = new QTableWidgetItem;
-    upbitBidPriceTitleItem->setText("매수 호가");
-    ui->tUpbitPrice->setItem(0, 3, upbitBidPriceTitleItem);
+    ui->tUpbitPrice->setColumnWidth(1, 80);
+    ui->tUpbitPrice->setColumnWidth(2, 80);
+    ui->tUpbitPrice->setColumnWidth(3, 80);
 
     QTableWidgetItem *upbitBidSizeTitleItem = new QTableWidgetItem;
     upbitBidSizeTitleItem->setText("매수 잔량");
-    ui->tUpbitPrice->setItem(0, 4, upbitBidSizeTitleItem);
+    ui->tUpbitPrice->setItem(0, 1, upbitBidSizeTitleItem);
+
+    QTableWidgetItem *upbitPriceTitleItem = new QTableWidgetItem;
+    upbitPriceTitleItem->setText("호가");
+    ui->tUpbitPrice->setItem(0, 2, upbitPriceTitleItem);
+
+    QTableWidgetItem *upbitAskSizeTitleItem = new QTableWidgetItem;
+    upbitAskSizeTitleItem->setText("매도 잔량");
+    ui->tUpbitPrice->setItem(0, 3, upbitAskSizeTitleItem);
 
     QObject::connect(this, SIGNAL(sigBinanceTextLabel(QString)), this, SLOT(binanceBTCPrice(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigBinanceTextLabel(QString)), this, SLOT(binanceBTCPrice(QString)), Qt::QueuedConnection);
 
     ui->tBinancePrice->horizontalHeader()->setVisible(false);
     ui->tBinancePrice->verticalHeader()->setVisible(false);
-    ui->tBinancePrice->setColumnCount(5);
+    ui->tBinancePrice->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->tBinancePrice->setColumnCount(4);
     ui->tBinancePrice->setRowCount(30);
     ui->tBinancePrice->setColumnWidth(0, 0);
-    ui->tBinancePrice->setColumnWidth(1, 100);
-    ui->tBinancePrice->setColumnWidth(2, 100);
-    ui->tBinancePrice->setColumnWidth(3, 100);
-    ui->tBinancePrice->setColumnWidth(4, 100);
-
-    QTableWidgetItem *binanceAskPriceTitleItem = new QTableWidgetItem;
-    binanceAskPriceTitleItem->setText("매도 호가");
-    ui->tBinancePrice->setItem(0, 1, binanceAskPriceTitleItem);
-
-    QTableWidgetItem *binanceAskSizeTitleItem = new QTableWidgetItem;
-    binanceAskSizeTitleItem->setText("매도 잔량");
-    ui->tBinancePrice->setItem(0, 2, binanceAskSizeTitleItem);
-
-    QTableWidgetItem *binanceBidPriceTitleItem = new QTableWidgetItem;
-    binanceBidPriceTitleItem->setText("매수 호가");
-    ui->tBinancePrice->setItem(0, 3, binanceBidPriceTitleItem);
+    ui->tBinancePrice->setColumnWidth(1, 80);
+    ui->tBinancePrice->setColumnWidth(2, 80);
+    ui->tBinancePrice->setColumnWidth(3, 80);
 
     QTableWidgetItem *binanceBidSizeTitleItem = new QTableWidgetItem;
     binanceBidSizeTitleItem->setText("매수 잔량");
-    ui->tBinancePrice->setItem(0, 4, binanceBidSizeTitleItem);
+    ui->tBinancePrice->setItem(0, 1, binanceBidSizeTitleItem);
+
+    QTableWidgetItem *binancePriceTitleItem = new QTableWidgetItem;
+    binancePriceTitleItem->setText("호가");
+    ui->tBinancePrice->setItem(0, 2, binancePriceTitleItem);
+
+    QTableWidgetItem *binanceAskSizeTitleItem = new QTableWidgetItem;
+    binanceAskSizeTitleItem->setText("매도 잔량");
+    ui->tBinancePrice->setItem(0, 3, binanceAskSizeTitleItem);
 
     QObject::connect(this, SIGNAL(sigBinanceFuturesTextLabel(QString)), this, SLOT(binanceFuturesBTCPrice(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigBinanceFuturesTextLabel(QString)), this, SLOT(binanceFuturesBTCPrice(QString)), Qt::QueuedConnection);
 
     ui->tBinanceFuturesPrice->horizontalHeader()->setVisible(false);
     ui->tBinanceFuturesPrice->verticalHeader()->setVisible(false);
-    ui->tBinanceFuturesPrice->setColumnCount(5);
+    ui->tBinanceFuturesPrice->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->tBinanceFuturesPrice->setColumnCount(4);
     ui->tBinanceFuturesPrice->setRowCount(30);
     ui->tBinanceFuturesPrice->setColumnWidth(0, 0);
-    ui->tBinanceFuturesPrice->setColumnWidth(1, 100);
-    ui->tBinanceFuturesPrice->setColumnWidth(2, 100);
-    ui->tBinanceFuturesPrice->setColumnWidth(3, 100);
-    ui->tBinanceFuturesPrice->setColumnWidth(4, 100);
+    ui->tBinanceFuturesPrice->setColumnWidth(1, 80);
+    ui->tBinanceFuturesPrice->setColumnWidth(2, 80);
+    ui->tBinanceFuturesPrice->setColumnWidth(3, 80);
 
-    QTableWidgetItem *binanceFuturesBidPriceTitleItem = new QTableWidgetItem;
-    binanceFuturesBidPriceTitleItem->setText("매수 호가");
-    ui->tBinanceFuturesPrice->setItem(0, 1, binanceFuturesBidPriceTitleItem);
+    QFont upbitFont = ui->tUpbitPrice->font();
+    upbitFont.setPointSize(10);
+    ui->tUpbitPrice->setFont(upbitFont);
+
+    QFont binanceFont = ui->tBinancePrice->font();
+    binanceFont.setPointSize(10);
+    ui->tBinancePrice->setFont(binanceFont);
+
+    QFont binanceFuturesFont = ui->tBinanceFuturesPrice->font();
+    binanceFuturesFont.setPointSize(10);
+    ui->tBinanceFuturesPrice->setFont(binanceFuturesFont);
+
+    QHeaderView *header;
+
+    // 업비트 호가창 셀 높이 지정
+    header = ui->tUpbitPrice->verticalHeader();
+    header->setSectionResizeMode(QHeaderView::Fixed);
+    header->setDefaultSectionSize(10);
+
+    // 바이낸스 호가창 셀 높이 지정
+    header = ui->tBinancePrice->verticalHeader();
+    header->setSectionResizeMode(QHeaderView::Fixed);
+    header->setDefaultSectionSize(10);
+
+    // 바이낸스 퓨처 호가창 셀 높이 지정
+    header = ui->tBinanceFuturesPrice->verticalHeader();
+    header->setSectionResizeMode(QHeaderView::Fixed);
+    header->setDefaultSectionSize(10);
+
+    rowCount = ui->tUpbitPrice->rowCount();
 
     QTableWidgetItem *binanceFuturesBidSizeTitleItem = new QTableWidgetItem;
     binanceFuturesBidSizeTitleItem->setText("매수 잔량");
-    ui->tBinanceFuturesPrice->setItem(0, 2, binanceFuturesBidSizeTitleItem);
+    ui->tBinanceFuturesPrice->setItem(0, 1, binanceFuturesBidSizeTitleItem);
 
-    QTableWidgetItem *binanceFuturesAskPriceTitleItem = new QTableWidgetItem;
-    binanceFuturesAskPriceTitleItem->setText("매도 호가");
-    ui->tBinanceFuturesPrice->setItem(0, 3, binanceFuturesAskPriceTitleItem);
+    QTableWidgetItem *binanceFuturesPriceTitleItem = new QTableWidgetItem;
+    binanceFuturesPriceTitleItem->setText("호가");
+    ui->tBinanceFuturesPrice->setItem(0, 2, binanceFuturesPriceTitleItem);
 
     QTableWidgetItem *binanceFuturesAskSizeTitleItem = new QTableWidgetItem;
     binanceFuturesAskSizeTitleItem->setText("매도 잔량");
-    ui->tBinanceFuturesPrice->setItem(0, 4, binanceFuturesAskSizeTitleItem);
+    ui->tBinanceFuturesPrice->setItem(0, 3, binanceFuturesAskSizeTitleItem);
+
+    for(int i=0; i<numQuotes; ++i) {
+        ui->tUpbitPrice->setItem(rowCount-(i + numQuotes + 1), colAsk, askSizeItemUpbit + i);
+        ui->tUpbitPrice->setItem(rowCount-(i + numQuotes + 1), colPrice, askPriceItemUpbit + i);
+        ui->tUpbitPrice->setItem(rowCount-(numQuotes - i), colPrice, bidPriceItemUpbit + i);
+        ui->tUpbitPrice->setItem(rowCount-(numQuotes - i), colBid, bidSizeItemUpbit + i);
+
+        ui->tBinancePrice->setItem(rowCount-(i + numQuotes + 1), colAsk, askSizeItemBinance + i);
+        ui->tBinancePrice->setItem(rowCount-(i + numQuotes + 1), colPrice, askPriceItemBinance + i);
+        ui->tBinancePrice->setItem(rowCount-(numQuotes - i), colPrice, bidPriceItemBinance + i);
+        ui->tBinancePrice->setItem(rowCount-(numQuotes - i), colBid, bidSizeItemBinance + i);
+
+        ui->tBinanceFuturesPrice->setItem(rowCount-(i + numQuotes + 1), colAsk, askSizeItemBinanceFutures + i);
+        ui->tBinanceFuturesPrice->setItem(rowCount-(i + numQuotes + 1), colPrice, askPriceItemBinanceFutures + i);
+        ui->tBinanceFuturesPrice->setItem(rowCount-(numQuotes - i), colPrice, bidPriceItemBinanceFutures + i);
+        ui->tBinanceFuturesPrice->setItem(rowCount-(numQuotes - i), colBid, bidSizeItemBinanceFutures + i);
+    }
 
 }
 
 // Destructor - 클래스 인스턴스가 종료/파괴
 CDlgMain::~CDlgMain()
 {
+    delete[] askPriceItemUpbit;
+    delete[] askSizeItemUpbit;
+    delete[] bidPriceItemUpbit;
+    delete[] bidSizeItemUpbit;
+
+    delete[] askPriceItemBinance;
+    delete[] askSizeItemBinance;
+    delete[] bidPriceItemBinance;
+    delete[] bidSizeItemBinance;
+
+    delete[] askPriceItemBinanceFutures;
+    delete[] askSizeItemBinanceFutures;
+    delete[] bidPriceItemBinanceFutures;
+    delete[] bidSizeItemBinanceFutures;
     delete ui;
 }
 
@@ -128,32 +177,24 @@ void CDlgMain::upbitBTCPrice(QString price) {
     QLocale locale(QLocale::English);
 
     QJsonArray arr = json_doc.object()["obu"].toArray();
-    for(int i=0; i<arr.size(); i++) {
+    for(int i=0; i<arr.size(); ++i) {
         QJsonObject tempItem = arr[i].toObject();
         auto ask_price = tempItem["ap"].toDouble();
-        auto ask_size = tempItem["as"].toDouble();
-        auto bid_price = tempItem["bp"].toDouble();
-        auto bid_size = tempItem["bs"].toDouble();
-
-        QTableWidgetItem *askPriceItem = new QTableWidgetItem;
         QString strAskPrice = locale.toString(ask_price, 'f', 0);
-        askPriceItem->setText(strAskPrice);
-        ui->tUpbitPrice->setItem(i+1, 1, askPriceItem);
 
-        QTableWidgetItem *askSizeItem = new QTableWidgetItem;
-        QString strAskSize = locale.toString(ask_size, 'f');
-        askSizeItem->setText(strAskSize);
-        ui->tUpbitPrice->setItem(i+1, 2, askSizeItem);
+        auto ask_size = tempItem["as"].toDouble();
+        QString strAskSize = locale.toString(ask_size, 'f', 3);
 
-        QTableWidgetItem *bidPriceItem = new QTableWidgetItem;
+        auto bid_price = tempItem["bp"].toDouble();
         QString strBidPrice = locale.toString(bid_price, 'f', 0);
-        bidPriceItem->setText(strBidPrice);
-        ui->tUpbitPrice->setItem(i+1, 3, bidPriceItem);
 
-        QTableWidgetItem *bidSizeItem = new QTableWidgetItem;
-        QString strBidSize = locale.toString(bid_size, 'f');
-        bidSizeItem->setText(strBidSize);
-        ui->tUpbitPrice->setItem(i+1, 4, bidSizeItem);
+        auto bid_size = tempItem["bs"].toDouble();
+        QString strBidSize = locale.toString(bid_size, 'f', 3);
+
+        ui->tUpbitPrice->item(rowCount - (i + numQuotes + 1), colAsk)->setText(strAskSize);
+        ui->tUpbitPrice->item(rowCount - (i + numQuotes + 1), colPrice)->setText(strAskPrice);
+        ui->tUpbitPrice->item(rowCount - (numQuotes - i), colPrice)->setText(strBidPrice);
+        ui->tUpbitPrice->item(rowCount - (numQuotes - i), colBid)->setText(strBidSize);
     }
 }
 
@@ -164,30 +205,16 @@ void CDlgMain::binanceBTCPrice(QString imessage) {
     auto bidData = data["bids"].toArray();
 
     QLocale locale(QLocale::English);
-    for(int i=0; i<askData.size(); i++) {
+    for(int i=0; i<numQuotes; ++i) {
         auto ask_price = askData[i][0];
         auto ask_size = askData[i][1];
-
-        QTableWidgetItem *askPriceItem = new QTableWidgetItem;
-        askPriceItem->setText(ask_price.toString());
-        ui->tBinancePrice->setItem(i+1, 1, askPriceItem);
-
-        QTableWidgetItem *askSizeItem = new QTableWidgetItem;
-        askSizeItem->setText(ask_size.toString());
-        ui->tBinancePrice->setItem(i+1, 2, askSizeItem);
-    }
-
-    for(int i=0; i<bidData.size(); i++) {
         auto bid_price = bidData[i][0];
         auto bid_size = bidData[i][1];
 
-        QTableWidgetItem *bidPriceItem = new QTableWidgetItem;
-        bidPriceItem->setText(bid_price.toString());
-        ui->tBinancePrice->setItem(i+1, 3, bidPriceItem);
-
-        QTableWidgetItem *bidSizeItem = new QTableWidgetItem;
-        bidSizeItem->setText(bid_size.toString());
-        ui->tBinancePrice->setItem(i+1, 4, bidSizeItem);
+        ui->tBinanceFuturesPrice->item(rowCount - (i + numQuotes + 1), colAsk)->setText(ask_size.toString());
+        ui->tBinanceFuturesPrice->item(rowCount - (i + numQuotes + 1), colPrice)->setText(ask_price.toString());
+        ui->tBinanceFuturesPrice->item(rowCount - (numQuotes - i), colPrice)->setText(bid_price.toString());
+        ui->tBinanceFuturesPrice->item(rowCount - (numQuotes - i), colBid)->setText(bid_size.toString());
     }
 }
 
@@ -198,30 +225,16 @@ void CDlgMain::binanceFuturesBTCPrice(QString imessage) {
     auto bidData = data["b"].toArray();
 
     QLocale locale(QLocale::English);
-    for(int i=0; i<askData.size(); i++) {
+    for(int i=0; i<numQuotes; ++i) {
         auto ask_price = askData[i][0];
         auto ask_size = askData[i][1];
-
-        QTableWidgetItem *askPriceItem = new QTableWidgetItem;
-        askPriceItem->setText(ask_price.toString());
-        ui->tBinanceFuturesPrice->setItem(i+1, 1, askPriceItem);
-
-        QTableWidgetItem *askSizeItem = new QTableWidgetItem;
-        askSizeItem->setText(ask_size.toString());
-        ui->tBinanceFuturesPrice->setItem(i+1, 2, askSizeItem);
-    }
-
-    for(int i=0; i<bidData.size(); i++) {
         auto bid_price = bidData[i][0];
         auto bid_size = bidData[i][1];
-
-        QTableWidgetItem *bidPriceItem = new QTableWidgetItem;
-        bidPriceItem->setText(bid_price.toString());
-        ui->tBinanceFuturesPrice->setItem(i+1, 3, bidPriceItem);
-
-        QTableWidgetItem *bidSizeItem = new QTableWidgetItem;
-        bidSizeItem->setText(bid_size.toString());
-        ui->tBinanceFuturesPrice->setItem(i+1, 4, bidSizeItem);
+        \
+        ui->tBinanceFuturesPrice->item(rowCount - (i + numQuotes + 1), colAsk)->setText(ask_size.toString());
+        ui->tBinanceFuturesPrice->item(rowCount - (i + numQuotes + 1), colPrice)->setText(ask_price.toString());
+        ui->tBinanceFuturesPrice->item(rowCount - (numQuotes - i), colPrice)->setText(bid_price.toString());
+        ui->tBinanceFuturesPrice->item(rowCount - (numQuotes - i), colBid)->setText(bid_size.toString());
     }
 }
 

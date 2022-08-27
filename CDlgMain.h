@@ -48,14 +48,17 @@ private:
     // 호가창에 표시할 아이템 수
     const int numQuotes = 15;
 
-    // 매도 컬럼
+    // 매도 컬럼 인덱스
     const int colAsk = 0;
-    // 호가 컬럼
+
+    // 호가 컬럼 인덱스
     const int colPrice = 1;
 
-    // 매수 컬럼
+    // 매수 컬럼 인덱스
     const int colBid = 2;
-        int mTwRowCount  = 0;
+
+    // 각 호가창 테이블별 row count
+    int rowCount  = 0;
 
 public:
     std::unique_ptr<CThMktUpbit> mpThMktUpbit;

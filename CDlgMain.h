@@ -58,26 +58,26 @@ private:
     const int colBid = 2;
 
     // 각 호가창 테이블별 row count
-    int rowCount  = 0;
+    int tblRowCount  = 0;
 
 public:
     std::unique_ptr<CThMktUpbit> mpThMktUpbit;
     std::unique_ptr<CThMktBinance> mpThMktBinance;
     std::unique_ptr<CThMktBinanceFutures> mpThMktBinanceFutures;
 
-    QTableWidgetItem *askPriceItemUpbit = new QTableWidgetItem[numQuotes];
-    QTableWidgetItem *askSizeItemUpbit = new QTableWidgetItem[numQuotes];
-    QTableWidgetItem *bidPriceItemUpbit = new QTableWidgetItem[numQuotes];
-    QTableWidgetItem *bidSizeItemUpbit = new QTableWidgetItem[numQuotes];
+    QTableWidgetItem *askPriceItemUpbit;
+    QTableWidgetItem *askSizeItemUpbit;
+    QTableWidgetItem *bidPriceItemUpbit;
+    QTableWidgetItem *bidSizeItemUpbit;
 
-    QTableWidgetItem *askPriceItemBinance = new QTableWidgetItem[numQuotes];
-    QTableWidgetItem *askSizeItemBinance = new QTableWidgetItem[numQuotes];
-    QTableWidgetItem *bidPriceItemBinance = new QTableWidgetItem[numQuotes];
-    QTableWidgetItem *bidSizeItemBinance = new QTableWidgetItem[numQuotes];
+    QTableWidgetItem *askPriceItemBinance;
+    QTableWidgetItem *askSizeItemBinance;
+    QTableWidgetItem *bidPriceItemBinance;
+    QTableWidgetItem *bidSizeItemBinance;
 
-    QTableWidgetItem *askPriceItemBinanceFutures = new QTableWidgetItem[numQuotes];
-    QTableWidgetItem *askSizeItemBinanceFutures = new QTableWidgetItem[numQuotes];
-    QTableWidgetItem *bidPriceItemBinanceFutures = new QTableWidgetItem[numQuotes];
-    QTableWidgetItem *bidSizeItemBinanceFutures = new QTableWidgetItem[numQuotes];
+    QTableWidgetItem *askPriceItemBinanceFutures;
+    QTableWidgetItem *askSizeItemBinanceFutures;
+    QTableWidgetItem *bidPriceItemBinanceFutures;
+    QTableWidgetItem *bidSizeItemBinanceFutures;
 };
 #endif // CDLGMAIN_H

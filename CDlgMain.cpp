@@ -14,17 +14,18 @@ CDlgMain::CDlgMain(QWidget *parent)
     mpThMktBinanceFutures = std::make_unique<CThMktBinanceFutures>();
 
     QObject::connect(this, SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
-    QObject::connect(mpThMktUpbit.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
-    QObject::connect(mpThMktBinance.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
-    QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
-
     QObject::connect(this, SIGNAL(sigUpbitTextLabel(QString)), this, SLOT(upbitBTCPrice(QString)), Qt::QueuedConnection);
-    QObject::connect(mpThMktUpbit.get(), SIGNAL(sigUpbitTextLabel(QString)), this, SLOT(upbitBTCPrice(QString)), Qt::QueuedConnection);
-
     QObject::connect(this, SIGNAL(sigBinanceTextLabel(QString)), this, SLOT(binanceBTCPrice(QString)), Qt::QueuedConnection);
+    QObject::connect(this, SIGNAL(sigBinanceFuturesTextLabel(QString)), this, SLOT(binanceFuturesBTCPrice(QString)), Qt::QueuedConnection);
+
+    QObject::connect(mpThMktUpbit.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
+    QObject::connect(mpThMktUpbit.get(), SIGNAL(sigUpbitTextLabel(QString)), this, SLOT(upbitBTCPrice(QString)), Qt::QueuedConnection);
+    QObject::connect(mpThMktUpbit.get(), SIGNAL(sigCreatePairsUpbit(Pairs_um*)), this, SLOT(slotCreatePairsUpbit(Pairs_um*)), Qt::QueuedConnection);
+
+    QObject::connect(mpThMktBinance.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigBinanceTextLabel(QString)), this, SLOT(binanceBTCPrice(QString)), Qt::QueuedConnection);
 
-    QObject::connect(this, SIGNAL(sigBinanceFuturesTextLabel(QString)), this, SLOT(binanceFuturesBTCPrice(QString)), Qt::QueuedConnection);
+    QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigBinanceFuturesTextLabel(QString)), this, SLOT(binanceFuturesBTCPrice(QString)), Qt::QueuedConnection);
 
     tblRowCount = ui->tUpbitPrice->rowCount();
@@ -203,4 +204,15 @@ void CDlgMain::slotLog1(QString iStr) {
     ui->teLog1->insertPlainText(iStr + "\n");
 
     ui->teLog1->moveCursor(QTextCursor::End);
+}
+
+void CDlgMain::slotCreatePairsUpbit(Pairs_um* pairs) {
+    upbitPairs = pairs;
+
+    ui->upbitPairList->clear();
+
+    for (auto item : *upbitPairs)
+        ui->upbitPairList->addItem(QString(item.second.name));
+
+    ui->upbitPairList->sortItems(Qt::AscendingOrder);
 }

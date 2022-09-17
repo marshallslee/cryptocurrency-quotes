@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTableWidgetItem>
+#include <QListWidgetItem>
 #include "CThMktUpbit.h"
 #include "CThMktBinance.h"
 #include "CThMktBinanceFutures.h"
@@ -43,6 +44,7 @@ public slots:
     void upbitBTCPrice(QString price);
     void binanceBTCPrice(QString price);
     void binanceFuturesBTCPrice(QString price);
+    void slotCreatePairsUpbit(Pairs_um*);
 
 private:
     // 호가창에 표시할 아이템 수
@@ -79,5 +81,7 @@ public:
     QTableWidgetItem *askSizeItemBinanceFutures;
     QTableWidgetItem *bidPriceItemBinanceFutures;
     QTableWidgetItem *bidSizeItemBinanceFutures;
+
+    Pairs_um* upbitPairs;
 };
 #endif // CDLGMAIN_H

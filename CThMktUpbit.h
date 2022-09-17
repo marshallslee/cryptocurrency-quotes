@@ -29,6 +29,7 @@ signals:
     void sigGETPairAll();
     // to WS
     void sigConnectWS();
+    void sigCreatePairsUpbit(Pairs_um*);
 
 public slots:
     void slotTimer500mSec(void);

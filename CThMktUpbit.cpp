@@ -138,6 +138,7 @@ void CThMktUpbit::getPairAll(void)
                             mUpbitPairs_um[iPair1.orgName] = iPair1;
                         }
                         emit sigLog1(tr("Rcvd UpbitPair Counts = %1").arg(mCountPairs));
+                        emit sigCreatePairsUpbit(&mUpbitPairs_um);
                         mbGotPairList = true;
                     }
                 }

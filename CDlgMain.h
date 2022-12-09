@@ -45,6 +45,7 @@ public slots:
     void binanceBTCPrice(QString price);
     void binanceFuturesBTCPrice(QString price);
     void slotCreatePairsUpbit(Pairs_um*);
+    void slotCreatePairsBinance(Pairs_um*);
 
 private:
     // 호가창에 표시할 아이템 수
@@ -83,5 +84,6 @@ public:
     QTableWidgetItem *bidSizeItemBinanceFutures;
 
     Pairs_um* upbitPairs;
+    Pairs_um* binancePairs;
 };
 #endif // CDLGMAIN_H

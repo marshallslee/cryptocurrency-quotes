@@ -4,18 +4,17 @@
 #include <QTimer>
 #include <QWebSocket>
 #include <QtNetwork>
+#include "Variables.h"
 
 using namespace std;
 
-enum class BinanceStatus_en
-{
+enum class BinanceStatus_en {
     Init = 0,
     WaitForMktPairs,
     Ready,
 };
 
-class CThMktBinance : public QThread
-{
+class CThMktBinance : public QThread {
     Q_OBJECT
 public:
     CThMktBinance();
@@ -27,10 +26,13 @@ protected:
 signals:
     void sigLog1(QString);
     void sigBinanceTextLabel(QString);
+    void sigGetAllBinancePairs();
     void sigConnectWS();
+    void sigCreatePairsBinance(Pairs_um*);
 
 public slots:
     void slotTimer500mSec(void);
+    void getAllBinancePairs(void);
 
     // to WS
     void connectWS(void);
@@ -39,6 +41,16 @@ private:
     BinanceStatus_en mBinanceStatus = BinanceStatus_en::Init;
     BinanceStatus_en GetStatusBinance(void);
     bool SetStatusBinance(BinanceStatus_en iStatus);
+    std::unordered_map<QString, TradingPair_st> mBinancePairs_um;
+
+    // 바이낸스 API 도메인
+    QString mUrlV1 = "https://api.binance.com/";
+
+    // 페어 리스트를 불러왔는지 여부를 담는 변수.
+    bool mbGotPairList = false;
+
+    int32_t mCountPairs = 0;
+    int32_t mSubsPairs  = 0;
 
 private: // Timer
     std::unique_ptr<QTimer> mpTimer;

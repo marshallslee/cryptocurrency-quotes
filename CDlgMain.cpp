@@ -24,6 +24,7 @@ CDlgMain::CDlgMain(QWidget *parent)
 
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigBinanceTextLabel(QString)), this, SLOT(binanceBTCPrice(QString)), Qt::QueuedConnection);
+    QObject::connect(mpThMktBinance.get(), SIGNAL(sigCreatePairsBinance(Pairs_um*)), this, SLOT(slotCreatePairsBinance(Pairs_um*)), Qt::QueuedConnection);
 
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigBinanceFuturesTextLabel(QString)), this, SLOT(binanceFuturesBTCPrice(QString)), Qt::QueuedConnection);
@@ -215,4 +216,16 @@ void CDlgMain::slotCreatePairsUpbit(Pairs_um* pairs) {
         ui->upbitPairList->addItem(QString(item.second.name));
 
     ui->upbitPairList->sortItems(Qt::AscendingOrder);
+}
+
+void CDlgMain::slotCreatePairsBinance(Pairs_um* pairs) {
+    binancePairs = pairs;
+
+    ui->binancePairList->clear();
+
+    for (auto item : *binancePairs) {
+        ui->binancePairList->addItem(QString(item.second.name));
+    }
+
+    ui->binancePairList->sortItems(Qt::AscendingOrder);
 }

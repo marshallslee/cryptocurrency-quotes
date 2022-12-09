@@ -66,6 +66,7 @@ void CThMktBinance::slotTimer500mSec(void) {
 }
 
 void CThMktBinance::run() {
+    QObject::connect(this, SIGNAL(sigGetAllBinancePairs()), this, SLOT(getAllBinancePairs()), Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(sigConnectWS()), this, SLOT(connectWS()), Qt::QueuedConnection);
 
     while (true) {
@@ -73,6 +74,7 @@ void CThMktBinance::run() {
         switch (GetStatusBinance()) {
         case BinanceStatus_en::Init:
             SetStatusBinance(BinanceStatus_en::WaitForMktPairs);
+            emit sigGetAllBinancePairs();
             break;
 
         case BinanceStatus_en::WaitForMktPairs:
@@ -115,4 +117,48 @@ void CThMktBinance::onTextMessageReceived(QString imessage) {
 
 void CThMktBinance::onPongReceived(quint64, const QByteArray&) {
 
+}
+
+void CThMktBinance::getAllBinancePairs() {
+    // 페어 리스트를 불러온 상태가 아니라면
+    if(mbGotPairList == false) {
+        QNetworkRequest request;
+        QNetworkAccessManager* iManager = new QNetworkAccessManager(this);
+
+        request.setUrl(QUrl(mUrlV1 + tr("api/v3/exchangeInfo")));
+        request.setRawHeader("Content-Type", "application/json;charset=UTF-8");
+        QObject::connect(iManager, &QNetworkAccessManager::finished, this, [=, this](QNetworkReply *reply) {
+            if (reply->error() == QNetworkReply::NoError)
+            {
+                QString iStr1 = reply->readAll();
+                if (iStr1 != "" && iStr1 != "{}")
+                {
+                    auto json_doc = QJsonDocument::fromJson(iStr1.toUtf8());
+                    QJsonArray sArray1 = json_doc.object()["symbols"].toArray();
+                    mCountPairs = sArray1.size();
+                    if (mCountPairs > 0)
+                    {
+                        TradingPair_st iPair1;
+                        for (int32_t i = 0; i < mCountPairs; ++i) {
+                            iPair1.orgName = sArray1[i].toObject()["symbol"].toString().toLower();
+                            iPair1.quote_symbol = sArray1[i].toObject()["quoteAsset"].toString();
+                            if (iPair1.quote_symbol != "USDT") {
+                                continue;
+                            }
+                            iPair1.base_symbol = sArray1[i].toObject()["baseAsset"].toString();
+                            iPair1.name = iPair1.base_symbol + tr("/") + iPair1.quote_symbol;
+                            mBinancePairs_um[iPair1.orgName] = iPair1;
+                            ++mSubsPairs;
+                        }
+                        emit sigLog1(tr("Rcvd BinancePair Counts = %1").arg(mCountPairs));
+                        emit sigCreatePairsBinance(&mBinancePairs_um);
+                        mbGotPairList = true;
+                    }
+                }
+            }
+            iManager->deleteLater();
+            reply->deleteLater();
+        });
+        iManager->get(request);
+    }
 }

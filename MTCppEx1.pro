@@ -1,4 +1,4 @@
-QT       += core gui concurrent
+QT += core gui concurrent websockets network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -9,13 +9,18 @@ CONFIG += c++2a
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    CTh1.cpp \
+    CThMktBinance.cpp \
+    CThMktBinanceFutures.cpp \
+    CThMktUpbit.cpp \
     main.cpp \
     CDlgMain.cpp
 
 HEADERS += \
     CDlgMain.h \
-    CTh1.h
+    CThMktBinance.h \
+    CThMktBinanceFutures.h \
+    CThMktUpbit.h \
+    Variables.h
 
 FORMS += \
     CDlgMain.ui

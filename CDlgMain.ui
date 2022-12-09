@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>855</width>
-    <height>480</height>
+    <width>918</width>
+    <height>989</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="btnStart">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>140</y>
+      <x>10</x>
+      <y>30</y>
       <width>80</width>
       <height>18</height>
      </rect>
@@ -30,50 +30,295 @@
    <widget class="QTextEdit" name="teLog1">
     <property name="geometry">
      <rect>
-      <x>160</x>
-      <y>0</y>
-      <width>451</width>
-      <height>221</height>
+      <x>100</x>
+      <y>800</y>
+      <width>761</width>
+      <height>141</height>
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnOrderClean">
+   <widget class="QTableWidget" name="tUpbitPrice">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>220</y>
-      <width>80</width>
-      <height>18</height>
+      <x>100</x>
+      <y>30</y>
+      <width>261</width>
+      <height>571</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="rowCount">
+     <number>30</number>
+    </property>
+    <attribute name="horizontalHeaderVisible">
+     <bool>true</bool>
+    </attribute>
+    <attribute name="horizontalHeaderDefaultSectionSize">
+     <number>80</number>
+    </attribute>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <column>
+     <property name="text">
+      <string>매도잔량</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>호가</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>매수잔량</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QTableWidget" name="tBinancePrice">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>30</y>
+      <width>261</width>
+      <height>571</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="rowCount">
+     <number>30</number>
+    </property>
+    <attribute name="horizontalHeaderDefaultSectionSize">
+     <number>80</number>
+    </attribute>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <column>
+     <property name="text">
+      <string>매도잔량</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>호가</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>매수잔량</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>10</y>
+      <width>67</width>
+      <height>17</height>
      </rect>
     </property>
     <property name="text">
-     <string>청소해라!</string>
+     <string>업비트</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnOrderWash">
+   <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>270</y>
-      <width>80</width>
-      <height>18</height>
+      <x>470</x>
+      <y>10</y>
+      <width>67</width>
+      <height>17</height>
      </rect>
     </property>
     <property name="text">
-     <string>세탁해라!</string>
+     <string>바이낸스</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnOrderShop">
+   <widget class="QTableWidget" name="tBinanceFuturesPrice">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>310</y>
-      <width>80</width>
-      <height>18</height>
+      <x>640</x>
+      <y>30</y>
+      <width>261</width>
+      <height>571</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="rowCount">
+     <number>30</number>
+    </property>
+    <attribute name="horizontalHeaderDefaultSectionSize">
+     <number>80</number>
+    </attribute>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <row/>
+    <column>
+     <property name="text">
+      <string>매도잔량</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>호가</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>매수잔량</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>10</y>
+      <width>91</width>
+      <height>17</height>
      </rect>
     </property>
     <property name="text">
-     <string>쇼핑해라!</string>
+     <string>바이낸스 퓨처</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="upbitPairList">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>611</y>
+      <width>171</width>
+      <height>181</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>8</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QListView" name="binanceFuturesPairList">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>610</y>
+      <width>171</width>
+      <height>181</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="binancePairList">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>610</y>
+      <width>171</width>
+      <height>181</height>
+     </rect>
     </property>
    </widget>
   </widget>
@@ -82,8 +327,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>855</width>
-     <height>21</height>
+     <width>918</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -104,54 +349,6 @@
     <hint type="destinationlabel">
      <x>206</x>
      <y>166</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnOrderClean</sender>
-   <signal>clicked()</signal>
-   <receiver>CDlgMain</receiver>
-   <slot>slotBtnOrderClean()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>81</x>
-     <y>246</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>126</x>
-     <y>250</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnOrderWash</sender>
-   <signal>clicked()</signal>
-   <receiver>CDlgMain</receiver>
-   <slot>slotBtnOrderWash()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>85</x>
-     <y>299</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>134</x>
-     <y>300</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnOrderShop</sender>
-   <signal>clicked()</signal>
-   <receiver>CDlgMain</receiver>
-   <slot>slotBtnOrderShop()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>98</x>
-     <y>338</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>142</x>
-     <y>338</y>
     </hint>
    </hints>
   </connection>

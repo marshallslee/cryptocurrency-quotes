@@ -2,7 +2,11 @@
 #define CDLGMAIN_H
 
 #include <QMainWindow>
-#include "CTh1.h"
+#include <QTableWidgetItem>
+#include <QListWidgetItem>
+#include "CThMktUpbit.h"
+#include "CThMktBinance.h"
+#include "CThMktBinanceFutures.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class CDlgMain; }
@@ -28,19 +32,58 @@ private:
 
 signals:
     void sigLog1(QString);
+    void sigUpbitTextLabel(QString);
+    void sigBinanceTextLabel(QString);
+    void sigBinanceFuturesTextLabel(QString);
 
 private slots:
     void slotBtnStart(void);
-    void slotBtnOrderClean(void);
-    void slotBtnOrderWash(void);
-    void slotBtnOrderShop(void);
 
 public slots:
     void slotLog1(QString iStr);
+    void upbitBTCPrice(QString price);
+    void binanceBTCPrice(QString price);
+    void binanceFuturesBTCPrice(QString price);
+    void slotCreatePairsUpbit(Pairs_um*);
+    void slotCreatePairsBinance(Pairs_um*);
+
+private:
+    // 호가창에 표시할 아이템 수
+    const int numQuotes = 15;
+
+    // 매도 컬럼 인덱스
+    const int colAsk = 0;
+
+    // 호가 컬럼 인덱스
+    const int colPrice = 1;
+
+    // 매수 컬럼 인덱스
+    const int colBid = 2;
+
+    // 각 호가창 테이블별 row count
+    int tblRowCount  = 0;
 
 public:
-    //CTh1 th1; // stack instance
-    std::unique_ptr<CTh1> mpTh1;
+    std::unique_ptr<CThMktUpbit> mpThMktUpbit;
+    std::unique_ptr<CThMktBinance> mpThMktBinance;
+    std::unique_ptr<CThMktBinanceFutures> mpThMktBinanceFutures;
 
+    QTableWidgetItem *askPriceItemUpbit;
+    QTableWidgetItem *askSizeItemUpbit;
+    QTableWidgetItem *bidPriceItemUpbit;
+    QTableWidgetItem *bidSizeItemUpbit;
+
+    QTableWidgetItem *askPriceItemBinance;
+    QTableWidgetItem *askSizeItemBinance;
+    QTableWidgetItem *bidPriceItemBinance;
+    QTableWidgetItem *bidSizeItemBinance;
+
+    QTableWidgetItem *askPriceItemBinanceFutures;
+    QTableWidgetItem *askSizeItemBinanceFutures;
+    QTableWidgetItem *bidPriceItemBinanceFutures;
+    QTableWidgetItem *bidSizeItemBinanceFutures;
+
+    Pairs_um* upbitPairs;
+    Pairs_um* binancePairs;
 };
 #endif // CDLGMAIN_H

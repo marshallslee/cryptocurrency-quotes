@@ -46,6 +46,7 @@ public slots:
     void binanceFuturesBTCPrice(QString price);
     void slotCreatePairsUpbit(Pairs_um*);
     void slotCreatePairsBinance(Pairs_um*);
+    void slotCreatePairsBinanceFutures(Pairs_um*);
 
 private:
     // 호가창에 표시할 아이템 수
@@ -85,5 +86,6 @@ public:
 
     Pairs_um* upbitPairs;
     Pairs_um* binancePairs;
+    Pairs_um* binanceFuturesPairs;
 };
 #endif // CDLGMAIN_H

@@ -2,8 +2,7 @@
 
 using namespace std;
 
-CThMktBinanceFutures::CThMktBinanceFutures()
-{
+CThMktBinanceFutures::CThMktBinanceFutures() {
     mBinanceFuturesWS_Url = "wss://fstream.binance.com/stream?streams=btcusdt@depth20@100ms";
 
     QObject::connect(&mBinanceFuturesWS, &QWebSocket::connected, this, &CThMktBinanceFutures::onConnected);
@@ -21,22 +20,18 @@ CThMktBinanceFutures::CThMktBinanceFutures()
     mpTimer->start(500); // 500 for 500ms
 }
 
-CThMktBinanceFutures::~CThMktBinanceFutures()
-{
+CThMktBinanceFutures::~CThMktBinanceFutures() {
 
 }
 
-BinanceFuturesStatus_en CThMktBinanceFutures::GetStatusBinanceFutures(void)
-{
+BinanceFuturesStatus_en CThMktBinanceFutures::GetStatusBinanceFutures(void) {
     return mBinanceFuturesStatus;
 }
 
-bool CThMktBinanceFutures::SetStatusBinanceFutures(BinanceFuturesStatus_en iStatus)
-{
+bool CThMktBinanceFutures::SetStatusBinanceFutures(BinanceFuturesStatus_en iStatus) {
     mBinanceFuturesStatus = iStatus;
 
-    switch (mBinanceFuturesStatus)
-    {
+    switch (mBinanceFuturesStatus) {
     case BinanceFuturesStatus_en::Init:
         emit sigLog1("BinanceFuturesStatus_en::Init");
         break;
@@ -66,6 +61,7 @@ void CThMktBinanceFutures::slotTimer500mSec(void) {
 }
 
 void CThMktBinanceFutures::run() {
+    QObject::connect(this, SIGNAL(sigGetAllBinanceFuturesPairs()), this, SLOT(getAllBinanceFuturesPairs()), Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(sigConnectWS()), this, SLOT(connectWS()), Qt::QueuedConnection);
 
     while (true) {
@@ -73,6 +69,7 @@ void CThMktBinanceFutures::run() {
         switch (GetStatusBinanceFutures()) {
         case BinanceFuturesStatus_en::Init:
             SetStatusBinanceFutures(BinanceFuturesStatus_en::WaitForMktPairs);
+            emit sigGetAllBinanceFuturesPairs();
             break;
 
         case BinanceFuturesStatus_en::WaitForMktPairs:
@@ -115,4 +112,45 @@ void CThMktBinanceFutures::onTextMessageReceived(QString imessage) {
 
 void CThMktBinanceFutures::onPongReceived(quint64, const QByteArray&) {
 
+}
+
+void CThMktBinanceFutures::getAllBinanceFuturesPairs() {
+    // 페어 리스트를 불러온 상태가 아니라면
+    if(mbGotPairList == false) {
+        QNetworkRequest request;
+        QNetworkAccessManager* iManager = new QNetworkAccessManager(this);
+
+        request.setUrl(QUrl(mUrlV1 + tr("fapi/v1/exchangeInfo")));
+        request.setRawHeader("Content-Type", "application/json;charset=UTF-8");
+        QObject::connect(iManager, &QNetworkAccessManager::finished, this, [=, this](QNetworkReply *reply) {
+            if (reply->error() == QNetworkReply::NoError) {
+                QString iStr1 = reply->readAll();
+                if (iStr1 != "" && iStr1 != "{}") {
+                    auto json_doc = QJsonDocument::fromJson(iStr1.toUtf8());
+                    QJsonArray sArray1 = json_doc.object()["symbols"].toArray();
+                    mCountPairs = sArray1.size();
+                    if (mCountPairs > 0) {
+                        TradingPair_st iPair1;
+                        for (int32_t i = 0; i < mCountPairs; ++i) {
+                            iPair1.orgName = sArray1[i].toObject()["symbol"].toString().toLower();
+                            iPair1.quote_symbol = sArray1[i].toObject()["quoteAsset"].toString();
+                            if (iPair1.quote_symbol != "USDT") {
+                                continue;
+                            }
+                            iPair1.base_symbol = sArray1[i].toObject()["baseAsset"].toString();
+                            iPair1.name = iPair1.base_symbol + tr("/") + iPair1.quote_symbol;
+                            mBinanceFuturesPairs_um[iPair1.orgName] = iPair1;
+                            ++mSubsPairs;
+                        }
+                        emit sigLog1(tr("Rcvd BinanceFuturesPair Counts = %1").arg(mCountPairs));
+                        emit sigCreatePairsBinanceFutures(&mBinanceFuturesPairs_um);
+                        mbGotPairList = true;
+                    }
+                }
+            }
+            iManager->deleteLater();
+            reply->deleteLater();
+        });
+        iManager->get(request);
+    }
 }

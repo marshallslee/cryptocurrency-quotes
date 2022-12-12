@@ -301,20 +301,20 @@
      </font>
     </property>
    </widget>
-   <widget class="QListView" name="binanceFuturesPairList">
+   <widget class="QListWidget" name="binancePairList">
     <property name="geometry">
      <rect>
-      <x>640</x>
+      <x>370</x>
       <y>610</y>
       <width>171</width>
       <height>181</height>
      </rect>
     </property>
    </widget>
-   <widget class="QListWidget" name="binancePairList">
+   <widget class="QListWidget" name="binanceFuturesPairList">
     <property name="geometry">
      <rect>
-      <x>370</x>
+      <x>640</x>
       <y>610</y>
       <width>171</width>
       <height>181</height>

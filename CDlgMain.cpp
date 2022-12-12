@@ -28,6 +28,7 @@ CDlgMain::CDlgMain(QWidget *parent)
 
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigBinanceFuturesTextLabel(QString)), this, SLOT(binanceFuturesBTCPrice(QString)), Qt::QueuedConnection);
+    QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigCreatePairsBinanceFutures(Pairs_um*)), this, SLOT(slotCreatePairsBinanceFutures(Pairs_um*)), Qt::QueuedConnection);
 
     tblRowCount = ui->tUpbitPrice->rowCount();
     ui->tUpbitPrice->setColumnWidth(0, 80);
@@ -102,7 +103,6 @@ CDlgMain::CDlgMain(QWidget *parent)
         ui->tBinanceFuturesPrice->setItem(tblRowCount-(numQuotes - i), colPrice, bidPriceItemBinanceFutures + i);
         ui->tBinanceFuturesPrice->setItem(tblRowCount-(numQuotes - i), colBid, bidSizeItemBinanceFutures + i);
     }
-
 }
 
 // Destructor - 클래스 인스턴스가 종료/파괴
@@ -229,3 +229,16 @@ void CDlgMain::slotCreatePairsBinance(Pairs_um* pairs) {
 
     ui->binancePairList->sortItems(Qt::AscendingOrder);
 }
+
+void CDlgMain::slotCreatePairsBinanceFutures(Pairs_um* pairs) {
+    binanceFuturesPairs = pairs;
+
+    ui->binanceFuturesPairList->clear();
+
+    for (auto item : *binanceFuturesPairs) {
+        ui->binanceFuturesPairList->addItem(QString(item.second.name));
+    }
+
+    ui->binanceFuturesPairList->sortItems(Qt::AscendingOrder);
+}
+

@@ -32,6 +32,7 @@ private:
 
 signals:
     void sigLog1(QString);
+    void sigCurrentPairChange(QString);
     void sigUpbitTextLabel(QString);
     void sigBinanceTextLabel(QString);
     void sigBinanceFuturesTextLabel(QString);
@@ -64,6 +65,8 @@ private:
 
     // 각 호가창 테이블별 row count
     int tblRowCount  = 0;
+
+    QString mCurrentUpbitPair = "KRW-BTC";
 
 public:
     std::unique_ptr<CThMktUpbit> mpThMktUpbit;

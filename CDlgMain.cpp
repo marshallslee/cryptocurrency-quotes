@@ -242,3 +242,7 @@ void CDlgMain::slotCreatePairsBinanceFutures(Pairs_um* pairs) {
     ui->binanceFuturesPairList->sortItems(Qt::AscendingOrder);
 }
 
+void CDlgMain::slotPairChanged(QListWidgetItem *item) {
+    emit sigLog1(item->text());
+}
+

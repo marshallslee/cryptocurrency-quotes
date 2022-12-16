@@ -38,6 +38,7 @@ signals:
 
 private slots:
     void slotBtnStart(void);
+    void slotPairChanged(QListWidgetItem*);
 
 public slots:
     void slotLog1(QString iStr);

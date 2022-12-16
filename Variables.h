@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QWebSocket>
 #include <QtNetwork>
+#include <QListWidgetItem>
 
 struct TradingPair_st
 {

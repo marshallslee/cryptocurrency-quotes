@@ -344,7 +344,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>81</x>
-     <y>170</y>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
      <x>206</x>
@@ -352,11 +352,57 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>upbitPairList</sender>
+   <signal>itemDoubleClicked(QListWidgetItem*)</signal>
+   <receiver>CDlgMain</receiver>
+   <slot>slotPairChanged(QListWidgetItem*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>185</x>
+     <y>723</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>458</x>
+     <y>494</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>binancePairList</sender>
+   <signal>itemDoubleClicked(QListWidgetItem*)</signal>
+   <receiver>CDlgMain</receiver>
+   <slot>slotPairChanged(QListWidgetItem*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>455</x>
+     <y>722</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>458</x>
+     <y>494</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>binanceFuturesPairList</sender>
+   <signal>itemDoubleClicked(QListWidgetItem*)</signal>
+   <receiver>CDlgMain</receiver>
+   <slot>slotPairChanged(QListWidgetItem*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>725</x>
+     <y>722</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>458</x>
+     <y>494</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slotBtnStart()</slot>
-  <slot>slotBtnOrderClean()</slot>
-  <slot>slotBtnOrderWash()</slot>
-  <slot>slotBtnOrderShop()</slot>
+  <slot>slotPairChanged(QListWidgetItem*)</slot>
  </slots>
 </ui>

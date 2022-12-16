@@ -204,7 +204,7 @@ void CThMktUpbit::onDisconnected(void)
 void CThMktUpbit::onTextMessageReceived(QString imessage)
 {
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
-    if (json_doc.object()["cd"].toString() == "KRW-BTC" &&
+    if (json_doc.object()["cd"].toString() == mCurrentPair &&
             json_doc.object()["ty"].toString() == "orderbook") {
         emit sigUpbitTextLabel(imessage);
     }

@@ -2,7 +2,8 @@
 
 using namespace std;
 
-CThMktBinanceFutures::CThMktBinanceFutures() {
+CThMktBinanceFutures::CThMktBinanceFutures()
+{
     mBinanceFuturesWS_Url = "wss://fstream.binance.com/stream?streams=btcusdt@depth20@100ms";
 
     QObject::connect(&mBinanceFuturesWS, &QWebSocket::connected, this, &CThMktBinanceFutures::onConnected);
@@ -20,18 +21,22 @@ CThMktBinanceFutures::CThMktBinanceFutures() {
     mpTimer->start(500); // 500 for 500ms
 }
 
-CThMktBinanceFutures::~CThMktBinanceFutures() {
+CThMktBinanceFutures::~CThMktBinanceFutures()
+{
 
 }
 
-BinanceFuturesStatus_en CThMktBinanceFutures::GetStatusBinanceFutures(void) {
+BinanceFuturesStatus_en CThMktBinanceFutures::GetStatusBinanceFutures(void)
+{
     return mBinanceFuturesStatus;
 }
 
-bool CThMktBinanceFutures::SetStatusBinanceFutures(BinanceFuturesStatus_en iStatus) {
+bool CThMktBinanceFutures::SetStatusBinanceFutures(BinanceFuturesStatus_en iStatus)
+{
     mBinanceFuturesStatus = iStatus;
 
-    switch (mBinanceFuturesStatus) {
+    switch (mBinanceFuturesStatus)
+    {
     case BinanceFuturesStatus_en::Init:
         emit sigLog1("BinanceFuturesStatus_en::Init");
         break;
@@ -51,22 +56,28 @@ bool CThMktBinanceFutures::SetStatusBinanceFutures(BinanceFuturesStatus_en iStat
     return true;
 }
 
-void CThMktBinanceFutures::slotTimer500mSec(void) {
-    if (mbStartCnt) {
+void CThMktBinanceFutures::slotTimer500mSec(void)
+{
+    if (mbStartCnt)
+    {
         ++mCountTimer;
-        if (mCountTimer % 2 == 0) {
+        if (mCountTimer % 2 == 0)
+        {
             mCountTimer = 0;
         }
     }
 }
 
-void CThMktBinanceFutures::run() {
+void CThMktBinanceFutures::run()
+{
     QObject::connect(this, SIGNAL(sigGetAllBinanceFuturesPairs()), this, SLOT(getAllBinanceFuturesPairs()), Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(sigConnectWS()), this, SLOT(connectWS()), Qt::QueuedConnection);
 
-    while (true) {
+    while (true)
+    {
         msleep(1);
-        switch (GetStatusBinanceFutures()) {
+        switch (GetStatusBinanceFutures())
+        {
         case BinanceFuturesStatus_en::Init:
             SetStatusBinanceFutures(BinanceFuturesStatus_en::WaitForMktPairs);
             emit sigGetAllBinanceFuturesPairs();
@@ -92,7 +103,8 @@ void CThMktBinanceFutures::connectWS(void)
     mBinanceFuturesWS.open(mBinanceFuturesWS_Url);
 }
 
-void CThMktBinanceFutures::onConnected(void) {
+void CThMktBinanceFutures::onConnected(void)
+{
     emit sigLog1("WS Binance Futures Connected");
 }
 
@@ -101,20 +113,24 @@ void CThMktBinanceFutures::onDisconnected(void)
     mBinanceFuturesWS.open(mBinanceFuturesWS_Url);
 }
 
-void CThMktBinanceFutures::onTextMessageReceived(QString imessage) {
+void CThMktBinanceFutures::onTextMessageReceived(QString imessage)
+{
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
     auto stream = json_doc.object()["stream"].toString();
 
-    if (stream == "btcusdt@depth20@100ms") {
+    if (stream == "btcusdt@depth20@100ms")
+    {
         emit sigBinanceFuturesTextLabel(imessage);
     }
 }
 
-void CThMktBinanceFutures::onPongReceived(quint64, const QByteArray&) {
+void CThMktBinanceFutures::onPongReceived(quint64, const QByteArray&)
+{
 
 }
 
-void CThMktBinanceFutures::getAllBinanceFuturesPairs() {
+void CThMktBinanceFutures::getAllBinanceFuturesPairs()
+{
     // 페어 리스트를 불러온 상태가 아니라면
     if(mbGotPairList == false) {
         QNetworkRequest request;
@@ -122,19 +138,25 @@ void CThMktBinanceFutures::getAllBinanceFuturesPairs() {
 
         request.setUrl(QUrl(mUrlV1 + tr("fapi/v1/exchangeInfo")));
         request.setRawHeader("Content-Type", "application/json;charset=UTF-8");
-        QObject::connect(iManager, &QNetworkAccessManager::finished, this, [=, this](QNetworkReply *reply) {
-            if (reply->error() == QNetworkReply::NoError) {
+        QObject::connect(iManager, &QNetworkAccessManager::finished, this, [=, this](QNetworkReply *reply)
+        {
+            if (reply->error() == QNetworkReply::NoError)
+            {
                 QString iStr1 = reply->readAll();
-                if (iStr1 != "" && iStr1 != "{}") {
+                if (iStr1 != "" && iStr1 != "{}")
+                {
                     auto json_doc = QJsonDocument::fromJson(iStr1.toUtf8());
                     QJsonArray sArray1 = json_doc.object()["symbols"].toArray();
                     mCountPairs = sArray1.size();
-                    if (mCountPairs > 0) {
+                    if (mCountPairs > 0)
+                    {
                         TradingPair_st iPair1;
-                        for (int32_t i = 0; i < mCountPairs; ++i) {
+                        for (int32_t i = 0; i < mCountPairs; ++i)
+                        {
                             iPair1.orgName = sArray1[i].toObject()["symbol"].toString().toLower();
                             iPair1.quote_symbol = sArray1[i].toObject()["quoteAsset"].toString();
-                            if (iPair1.quote_symbol != "USDT") {
+                            if (iPair1.quote_symbol != "USDT")
+                            {
                                 continue;
                             }
                             iPair1.base_symbol = sArray1[i].toObject()["baseAsset"].toString();

@@ -2,7 +2,8 @@
 
 using namespace std;
 
-CThMktUpbit::CThMktUpbit() {
+CThMktUpbit::CThMktUpbit()
+{
     mWS_Url = "wss://api.upbit.com/websocket/v1";
     mUUID = generateUUID();
 
@@ -21,18 +22,22 @@ CThMktUpbit::CThMktUpbit() {
     mpTimer->start(500); // 500 for 500ms
 }
 
-CThMktUpbit::~CThMktUpbit() {
+CThMktUpbit::~CThMktUpbit()
+{
 
 }
 
-UpbitStatus_en CThMktUpbit::GetStatusUpbit(void) {
+UpbitStatus_en CThMktUpbit::GetStatusUpbit(void)
+{
     return mUpbitStatus;
 }
 
-bool CThMktUpbit::SetStatusUpbit(UpbitStatus_en iStatus) {
+bool CThMktUpbit::SetStatusUpbit(UpbitStatus_en iStatus)
+{
     mUpbitStatus = iStatus;
 
-    switch (mUpbitStatus) {
+    switch (mUpbitStatus)
+    {
     case UpbitStatus_en::Init:
         emit sigLog1("UpbitStatus_en::Init");
         break;
@@ -52,22 +57,26 @@ bool CThMktUpbit::SetStatusUpbit(UpbitStatus_en iStatus) {
     return true;
 }
 
-void CThMktUpbit::run() {
+void CThMktUpbit::run()
+{
     QObject::connect(this, SIGNAL(sigGETPairAll()),
                      this, SLOT(getPairAll()), Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(sigConnectWS()),
                      this, SLOT(connectWS()), Qt::QueuedConnection);
 
-    while (true) {
+    while (true)
+    {
         msleep(1);
-        switch (GetStatusUpbit()) {
+        switch (GetStatusUpbit())
+        {
         case UpbitStatus_en::Init:
             SetStatusUpbit(UpbitStatus_en::WaitForMktPairs);
             emit sigGETPairAll();
             break;
 
         case UpbitStatus_en::WaitForMktPairs:
-            if (mbGotPairList == true) {
+            if (mbGotPairList == true)
+            {
                 SetStatusUpbit(UpbitStatus_en::Ready);
                 emit sigConnectWS();
                 mbStartCnt = true;
@@ -83,10 +92,13 @@ void CThMktUpbit::run() {
     }
 }
 
-void CThMktUpbit::slotTimer500mSec(void) {
-    if (mbStartCnt) {
+void CThMktUpbit::slotTimer500mSec(void)
+{
+    if (mbStartCnt)
+    {
         ++mCountTimer;
-        if (mCountTimer % 2 == 0) {
+        if (mCountTimer % 2 == 0)
+        {
             emit sigLog1(tr("Pairs = %1, Obu = %2, Trd = %3, Tckr = %4")
                          .arg(mCountPairs).arg(mCntObu).arg(mCntTrade).arg(mCntTicker));
 
@@ -95,23 +107,30 @@ void CThMktUpbit::slotTimer500mSec(void) {
     }
 }
 
-void CThMktUpbit::getPairAll(void) {
-    if (mbGotPairList == false) {
+void CThMktUpbit::getPairAll(void)
+{
+    if (mbGotPairList == false)
+    {
         QNetworkRequest request;
         QNetworkAccessManager* iManager = new QNetworkAccessManager(this);
 
         request.setUrl(QUrl(mUrlV1 + tr("market/all")));
         request.setRawHeader("Content-Type", "application/json;charset=UTF-8");
         QObject::connect(iManager, &QNetworkAccessManager::finished,
-                         this, [=, this](QNetworkReply *reply) {
-            if (reply->error() == QNetworkReply::NoError) {
+                         this, [=, this](QNetworkReply *reply)
+        {
+            if (reply->error() == QNetworkReply::NoError)
+            {
                 QString iStr1 = reply->readAll();
-                if (iStr1 != "" && iStr1 != "{}") {
+                if (iStr1 != "" && iStr1 != "{}")
+                {
                     auto json_doc = QJsonDocument::fromJson(iStr1.toUtf8());
                     mCountPairs = json_doc.array().size();
-                    if (mCountPairs > 0) {
+                    if (mCountPairs > 0)
+                    {
                         TradingPair_st iPair1;
-                        for (int32_t i = 0; i < mCountPairs; ++i) {
+                        for (int32_t i = 0; i < mCountPairs; ++i)
+                        {
                             iPair1.orgName = json_doc.array()[i].toObject()["market"].toString();
                             iPair1.quote_symbol = iPair1.orgName.left(iPair1.orgName.indexOf("-"));
                             iPair1.base_symbol = iPair1.orgName.right(iPair1.orgName.length() - iPair1.orgName.indexOf("-") - 1);
@@ -132,11 +151,13 @@ void CThMktUpbit::getPairAll(void) {
     }
 }
 
-void CThMktUpbit::connectWS(void) {
+void CThMktUpbit::connectWS(void)
+{
     mWS.open(mWS_Url);
 }
 
-void CThMktUpbit::onConnected(void) {
+void CThMktUpbit::onConnected(void)
+{
     emit sigLog1("WS Upbit Connected");
 
     QJsonArray iArrayTotal, iArrayCodes;
@@ -145,7 +166,8 @@ void CThMktUpbit::onConnected(void) {
     iObjTicket.insert("ticket", mUUID);
 
     int16_t idx1 = 0;
-    for (auto&& item : mUpbitPairs_um) {
+    for (auto&& item : mUpbitPairs_um)
+    {
         iArrayCodes.insert(idx1++, item.first);
     }
     iObjObu.insert("type", "orderbook");
@@ -175,51 +197,61 @@ void CThMktUpbit::onConnected(void) {
     mWS.sendBinaryMessage(iStrFinal.toUtf8());
 }
 
-void CThMktUpbit::onDisconnected(void) {
+void CThMktUpbit::onDisconnected(void)
+{
     mWS.open(mWS_Url);
 }
 
-void CThMktUpbit::onTextMessageReceived(QString imessage) {
+void CThMktUpbit::onTextMessageReceived(QString imessage)
+{
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
 
     // 마켓코드 (예: KRW-BTC)
     QString marketCode = json_doc.object()["cd"].toString();
     QString dataType = json_doc.object()["ty"].toString();
 
-    if(marketCode == mCurrentPair) {
+    if(marketCode == mCurrentPair)
+    {
         // 호가 데이터를 수신하는 경우
-        if (dataType == "orderbook") {
+        if (dataType == "orderbook")
+        {
             emit sigUpbitTextLabel(imessage);
 
-            if (imessage.indexOf("orderbook") > 0) {
+            if (imessage.indexOf("orderbook") > 0)
+            {
                 ++mCntObu;
             }
         }
 
         // 현재가 데이터를 수신하는 경우
-        else if (dataType == "ticker") {
+        else if (dataType == "ticker")
+        {
             QString tradePrice = json_doc.object()["tp"].toVariant().toString();
             emit sigUpbitTicker(tradePrice);
 
-            if (imessage.indexOf("ticker") > 0) {
+            if (imessage.indexOf("ticker") > 0)
+            {
                 ++mCntTicker;
             }
         }
     }
 
 
-    else if (imessage.indexOf("trade") > 0) {
+    else if (imessage.indexOf("trade") > 0)
+    {
         ++mCntTrade;
     }
 
 
 }
 
-void CThMktUpbit::onPongReceived(quint64, const QByteArray&) {
+void CThMktUpbit::onPongReceived(quint64, const QByteArray&)
+{
 
 }
 
-QString CThMktUpbit::generateUUID(void) {
+QString CThMktUpbit::generateUUID(void)
+{
     srand(QTime::currentTime().msec()
             + QTime::currentTime().second()
             + QTime::currentTime().minute()

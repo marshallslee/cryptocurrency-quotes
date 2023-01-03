@@ -56,22 +56,28 @@ bool CThMktBinance::SetStatusBinance(BinanceStatus_en iStatus)
     return true;
 }
 
-void CThMktBinance::slotTimer500mSec(void) {
-    if (mbStartCnt) {
+void CThMktBinance::slotTimer500mSec(void)
+{
+    if (mbStartCnt)
+    {
         ++mCountTimer;
-        if (mCountTimer % 2 == 0) {
+        if (mCountTimer % 2 == 0)
+        {
             mCountTimer = 0;
         }
     }
 }
 
-void CThMktBinance::run() {
+void CThMktBinance::run()
+{
     QObject::connect(this, SIGNAL(sigGetAllBinancePairs()), this, SLOT(getAllBinancePairs()), Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(sigConnectWS()), this, SLOT(connectWS()), Qt::QueuedConnection);
 
-    while (true) {
+    while (true)
+    {
         msleep(1);
-        switch (GetStatusBinance()) {
+        switch (GetStatusBinance())
+        {
         case BinanceStatus_en::Init:
             SetStatusBinance(BinanceStatus_en::WaitForMktPairs);
             emit sigGetAllBinancePairs();
@@ -97,7 +103,8 @@ void CThMktBinance::connectWS(void)
     mBinanceWS.open(mBinanceWS_Url);
 }
 
-void CThMktBinance::onConnected(void) {
+void CThMktBinance::onConnected(void)
+{
     emit sigLog1("WS Binance Connected");
 }
 
@@ -106,28 +113,34 @@ void CThMktBinance::onDisconnected(void)
     mBinanceWS.open(mBinanceWS_Url);
 }
 
-void CThMktBinance::onTextMessageReceived(QString imessage) {
+void CThMktBinance::onTextMessageReceived(QString imessage)
+{
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
     auto stream = json_doc.object()["stream"].toString();
 
-    if (stream == "btcusdt@depth20@100ms") {
+    if (stream == "btcusdt@depth20@100ms")
+    {
         emit sigBinanceTextLabel(imessage);
     }
 }
 
-void CThMktBinance::onPongReceived(quint64, const QByteArray&) {
+void CThMktBinance::onPongReceived(quint64, const QByteArray&)
+{
 
 }
 
-void CThMktBinance::getAllBinancePairs() {
+void CThMktBinance::getAllBinancePairs()
+{
     // 페어 리스트를 불러온 상태가 아니라면
-    if(mbGotPairList == false) {
+    if(mbGotPairList == false)
+    {
         QNetworkRequest request;
         QNetworkAccessManager* iManager = new QNetworkAccessManager(this);
 
         request.setUrl(QUrl(mUrlV1 + tr("api/v3/exchangeInfo")));
         request.setRawHeader("Content-Type", "application/json;charset=UTF-8");
-        QObject::connect(iManager, &QNetworkAccessManager::finished, this, [=, this](QNetworkReply *reply) {
+        QObject::connect(iManager, &QNetworkAccessManager::finished, this, [=, this](QNetworkReply *reply)
+        {
             if (reply->error() == QNetworkReply::NoError)
             {
                 QString iStr1 = reply->readAll();
@@ -139,10 +152,12 @@ void CThMktBinance::getAllBinancePairs() {
                     if (mCountPairs > 0)
                     {
                         TradingPair_st iPair1;
-                        for (int32_t i = 0; i < mCountPairs; ++i) {
+                        for (int32_t i = 0; i < mCountPairs; ++i)
+                        {
                             iPair1.orgName = sArray1[i].toObject()["symbol"].toString().toLower();
                             iPair1.quote_symbol = sArray1[i].toObject()["quoteAsset"].toString();
-                            if (iPair1.quote_symbol != "USDT") {
+                            if (iPair1.quote_symbol != "USDT")
+                            {
                                 continue;
                             }
                             iPair1.base_symbol = sArray1[i].toObject()["baseAsset"].toString();

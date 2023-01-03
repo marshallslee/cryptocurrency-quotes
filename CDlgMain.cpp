@@ -6,7 +6,8 @@ using namespace std;
 // Constructor
 CDlgMain::CDlgMain(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::CDlgMain) {
+    , ui(new Ui::CDlgMain)
+{
     ui->setupUi(this);
 
     mpThMktUpbit = std::make_unique<CThMktUpbit>();
@@ -89,7 +90,8 @@ CDlgMain::CDlgMain(QWidget *parent)
     header->setSectionResizeMode(QHeaderView::Fixed);
     header->setDefaultSectionSize(10);
 
-    for(int i=0; i<numQuotes; ++i) {
+    for(int i=0; i<numQuotes; ++i)
+    {
         ui->tUpbitPrice->setItem(tblRowCount-(i + numQuotes + 1), colAsk, askSizeItemUpbit + i);
         ui->tUpbitPrice->setItem(tblRowCount-(i + numQuotes + 1), colPrice, askPriceItemUpbit + i);
         ui->tUpbitPrice->setItem(tblRowCount-(numQuotes - i), colPrice, bidPriceItemUpbit + i);
@@ -135,13 +137,15 @@ void CDlgMain::slotBtnStart(void)
     mpThMktBinanceFutures->start();
 }
 
-void CDlgMain::upbitBTCPrice(QString price) {
+void CDlgMain::upbitBTCPrice(QString price)
+{
     auto json_doc = QJsonDocument::fromJson(price.toUtf8());
 
     QLocale locale(QLocale::English);
 
     QJsonArray arr = json_doc.object()["obu"].toArray();
-    for(int i=0; i<arr.size(); ++i) {
+    for(int i=0; i<arr.size(); ++i)
+    {
         QJsonObject tempItem = arr[i].toObject();
         auto ask_price = tempItem["ap"].toDouble();
         QString strAskPrice = locale.toString(ask_price, 'f', 0);
@@ -162,14 +166,16 @@ void CDlgMain::upbitBTCPrice(QString price) {
     }
 }
 
-void CDlgMain::binanceBTCPrice(QString imessage) {
+void CDlgMain::binanceBTCPrice(QString imessage)
+{
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
     auto data = json_doc.object()["data"].toObject();
     auto askData = data["asks"].toArray();
     auto bidData = data["bids"].toArray();
 
     QLocale locale(QLocale::English);
-    for(int i=0; i<numQuotes; ++i) {
+    for(int i=0; i<numQuotes; ++i)
+    {
         auto ask_price = askData[i][0];
         auto ask_size = askData[i][1];
         auto bid_price = bidData[i][0];
@@ -182,14 +188,16 @@ void CDlgMain::binanceBTCPrice(QString imessage) {
     }
 }
 
-void CDlgMain::binanceFuturesBTCPrice(QString imessage) {
+void CDlgMain::binanceFuturesBTCPrice(QString imessage)
+{
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
     auto data = json_doc.object()["data"].toObject();
     auto askData = data["a"].toArray();
     auto bidData = data["b"].toArray();
 
     QLocale locale(QLocale::English);
-    for(int i=0; i<numQuotes; ++i) {
+    for(int i=0; i<numQuotes; ++i)
+    {
         auto ask_price = askData[i][0];
         auto ask_size = askData[i][1];
         auto bid_price = bidData[i][0];
@@ -202,26 +210,30 @@ void CDlgMain::binanceFuturesBTCPrice(QString imessage) {
     }
 }
 
-void CDlgMain::slotLog1(QString iStr) {
+void CDlgMain::slotLog1(QString iStr)
+{
     ui->teLog1->moveCursor(QTextCursor::End);
     ui->teLog1->insertPlainText(iStr + "\n");
 
     ui->teLog1->moveCursor(QTextCursor::End);
 }
 
-void CDlgMain::slotCreatePairsUpbit(Pairs_um* pairs) {
+void CDlgMain::slotCreatePairsUpbit(Pairs_um* pairs)
+{
     upbitPairs = pairs;
 
     ui->upbitPairList->clear();
 
-    for (auto item : *upbitPairs) {
+    for (auto item : *upbitPairs)
+    {
         ui->upbitPairList->addItem(QString(item.second.name));
     }
 
     ui->upbitPairList->sortItems(Qt::AscendingOrder);
 }
 
-void CDlgMain::slotCreatePairsBinance(Pairs_um* pairs) {
+void CDlgMain::slotCreatePairsBinance(Pairs_um* pairs)
+{
     binancePairs = pairs;
 
     ui->binancePairList->clear();
@@ -233,12 +245,14 @@ void CDlgMain::slotCreatePairsBinance(Pairs_um* pairs) {
     ui->binancePairList->sortItems(Qt::AscendingOrder);
 }
 
-void CDlgMain::slotCreatePairsBinanceFutures(Pairs_um* pairs) {
+void CDlgMain::slotCreatePairsBinanceFutures(Pairs_um* pairs)
+{
     binanceFuturesPairs = pairs;
 
     ui->binanceFuturesPairList->clear();
 
-    for (auto item : *binanceFuturesPairs) {
+    for (auto item : *binanceFuturesPairs)
+    {
         ui->binanceFuturesPairList->addItem(QString(item.second.name));
     }
 
@@ -254,6 +268,7 @@ void CDlgMain::slotPairChanged(QListWidgetItem *item) {
     mpThMktUpbit->mCurrentPair = pair;
 }
 
-void CDlgMain::slotUpbitTicker(QString message) {
+void CDlgMain::slotUpbitTicker(QString message)
+{
     emit sigLog1(message);
 }

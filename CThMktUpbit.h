@@ -30,6 +30,7 @@ signals:
     // to WS
     void sigConnectWS();
     void sigCreatePairsUpbit(Pairs_um*);
+    void sigUpbitTicker(QString);
 
 public slots:
     void slotTimer500mSec(void);

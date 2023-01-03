@@ -117,7 +117,8 @@ void CThMktUpbit::getPairAll(void)
         request.setUrl(QUrl(mUrlV1 + tr("market/all")));
         request.setRawHeader("Content-Type", "application/json;charset=UTF-8");
         QObject::connect(iManager, &QNetworkAccessManager::finished,
-                         this, [=, this](QNetworkReply *reply) {
+                         this, [=, this](QNetworkReply *reply)
+        {
             if (reply->error() == QNetworkReply::NoError)
             {
                 QString iStr1 = reply->readAll();
@@ -204,32 +205,44 @@ void CThMktUpbit::onDisconnected(void)
 void CThMktUpbit::onTextMessageReceived(QString imessage)
 {
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
-    if (json_doc.object()["cd"].toString() == mCurrentPair &&
-            json_doc.object()["ty"].toString() == "orderbook") {
-        emit sigUpbitTextLabel(imessage);
-    }
-    if (imessage.indexOf("orderbook") > 0)
+
+    // 마켓코드 (예: KRW-BTC)
+    QString marketCode = json_doc.object()["cd"].toString();
+    QString dataType = json_doc.object()["ty"].toString();
+
+    if(marketCode == mCurrentPair)
     {
-        ++mCntObu;
+        // 호가 데이터를 수신하는 경우
+        if (dataType == "orderbook")
+        {
+            emit sigUpbitTextLabel(imessage);
+
+            if (imessage.indexOf("orderbook") > 0)
+            {
+                ++mCntObu;
+            }
+        }
+
+        // 현재가 데이터를 수신하는 경우
+        else if (dataType == "ticker")
+        {
+            QString tradePrice = json_doc.object()["tp"].toVariant().toString();
+            emit sigUpbitTicker(tradePrice);
+
+            if (imessage.indexOf("ticker") > 0)
+            {
+                ++mCntTicker;
+            }
+        }
     }
+
+
     else if (imessage.indexOf("trade") > 0)
     {
         ++mCntTrade;
-#if 0
-        auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
-        if (json_doc.object()["cd"].toString() == "KRW-BTC")
-        {
-            emit sigLog1(currentPrice);
-            emit sigLog1(tr("BTC/KRW CurPrice = %1, TrdVol = %2")
-                         .arg(json_doc.object()["tp"].toVariant().toString())
-                         .arg(json_doc.object()["tv"].toVariant().toString()));
-        }
-#endif
     }
-    else if (imessage.indexOf("ticker") > 0)
-    {
-        ++mCntTicker;
-    }
+
+
 }
 
 void CThMktUpbit::onPongReceived(quint64, const QByteArray&)

@@ -22,6 +22,7 @@ CDlgMain::CDlgMain(QWidget *parent)
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigUpbitTextLabel(QString)), this, SLOT(upbitBTCPrice(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigCreatePairsUpbit(Pairs_um*)), this, SLOT(slotCreatePairsUpbit(Pairs_um*)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigCurrentPairChange(QString)), this, SLOT(slotCurrentPairChange(QString)), Qt::QueuedConnection);
+    QObject::connect(mpThMktUpbit.get(), SIGNAL(sigUpbitTicker(QString)), this, SLOT(slotUpbitTicker(QString)), Qt::QueuedConnection);
 
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigBinanceTextLabel(QString)), this, SLOT(binanceBTCPrice(QString)), Qt::QueuedConnection);
@@ -213,8 +214,9 @@ void CDlgMain::slotCreatePairsUpbit(Pairs_um* pairs) {
 
     ui->upbitPairList->clear();
 
-    for (auto item : *upbitPairs)
+    for (auto item : *upbitPairs) {
         ui->upbitPairList->addItem(QString(item.second.name));
+    }
 
     ui->upbitPairList->sortItems(Qt::AscendingOrder);
 }
@@ -252,3 +254,6 @@ void CDlgMain::slotPairChanged(QListWidgetItem *item) {
     mpThMktUpbit->mCurrentPair = pair;
 }
 
+void CDlgMain::slotUpbitTicker(QString message) {
+    emit sigLog1(message);
+}

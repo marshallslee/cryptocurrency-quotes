@@ -268,7 +268,10 @@ void CDlgMain::slotPairChanged(QListWidgetItem *item) {
     mpThMktUpbit->mCurrentPair = pair;
 }
 
-void CDlgMain::slotUpbitTicker(QString message)
+void CDlgMain::slotUpbitTicker(QString imessage)
 {
-    emit sigLog1(tr("업비트 현재가: %1").arg(message));
+    auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
+    QString marketCode = json_doc.object()["cd"].toString();
+    QString tradePrice = json_doc.object()["tp"].toVariant().toString();
+    emit sigLog1(tr("[업비트] 종목코드: %1, 현재가: %2").arg(marketCode).arg(tradePrice));
 }

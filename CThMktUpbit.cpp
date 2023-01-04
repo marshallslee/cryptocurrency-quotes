@@ -215,7 +215,7 @@ void CThMktUpbit::onTextMessageReceived(QString imessage)
         // 호가 데이터를 수신하는 경우
         if (dataType == "orderbook")
         {
-            emit sigUpbitTextLabel(imessage);
+            emit sigUpbitOrderbook(imessage);
 
             if (imessage.indexOf("orderbook") > 0)
             {

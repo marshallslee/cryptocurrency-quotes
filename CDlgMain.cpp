@@ -15,22 +15,22 @@ CDlgMain::CDlgMain(QWidget *parent)
     mpThMktBinanceFutures = std::make_unique<CThMktBinanceFutures>();
 
     QObject::connect(this, SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
-    QObject::connect(this, SIGNAL(sigUpbitTextLabel(QString)), this, SLOT(upbitBTCPrice(QString)), Qt::QueuedConnection);
-    QObject::connect(this, SIGNAL(sigBinanceTextLabel(QString)), this, SLOT(binanceBTCPrice(QString)), Qt::QueuedConnection);
-    QObject::connect(this, SIGNAL(sigBinanceFuturesTextLabel(QString)), this, SLOT(binanceFuturesBTCPrice(QString)), Qt::QueuedConnection);
+    QObject::connect(this, SIGNAL(sigUpbitOrderbook(QString)), this, SLOT(slotUpbitOrderbook(QString)), Qt::QueuedConnection);
+    QObject::connect(this, SIGNAL(sigBinanceOrderbook(QString)), this, SLOT(slotBinanceOrderbook(QString)), Qt::QueuedConnection);
+    QObject::connect(this, SIGNAL(sigBinanceFuturesOrderbook(QString)), this, SLOT(slotBinanceFuturesOrderbook(QString)), Qt::QueuedConnection);
 
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
-    QObject::connect(mpThMktUpbit.get(), SIGNAL(sigUpbitTextLabel(QString)), this, SLOT(upbitBTCPrice(QString)), Qt::QueuedConnection);
+    QObject::connect(mpThMktUpbit.get(), SIGNAL(sigUpbitOrderbook(QString)), this, SLOT(slotUpbitOrderbook(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigCreatePairsUpbit(Pairs_um*)), this, SLOT(slotCreatePairsUpbit(Pairs_um*)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigCurrentPairChange(QString)), this, SLOT(slotCurrentPairChange(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigUpbitTicker(QString)), this, SLOT(slotUpbitTicker(QString)), Qt::QueuedConnection);
 
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
-    QObject::connect(mpThMktBinance.get(), SIGNAL(sigBinanceTextLabel(QString)), this, SLOT(binanceBTCPrice(QString)), Qt::QueuedConnection);
+    QObject::connect(mpThMktBinance.get(), SIGNAL(sigBinanceOrderbook(QString)), this, SLOT(slotBinanceOrderbook(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigCreatePairsBinance(Pairs_um*)), this, SLOT(slotCreatePairsBinance(Pairs_um*)), Qt::QueuedConnection);
 
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
-    QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigBinanceFuturesTextLabel(QString)), this, SLOT(binanceFuturesBTCPrice(QString)), Qt::QueuedConnection);
+    QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigBinanceFuturesOrderbook(QString)), this, SLOT(slotBinanceFuturesOrderbook(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigCreatePairsBinanceFutures(Pairs_um*)), this, SLOT(slotCreatePairsBinanceFutures(Pairs_um*)), Qt::QueuedConnection);
 
     tblRowCount = ui->tUpbitPrice->rowCount();
@@ -137,7 +137,7 @@ void CDlgMain::slotBtnStart(void)
     mpThMktBinanceFutures->start();
 }
 
-void CDlgMain::upbitBTCPrice(QString price)
+void CDlgMain::slotUpbitOrderbook(QString price)
 {
     auto json_doc = QJsonDocument::fromJson(price.toUtf8());
 
@@ -166,7 +166,7 @@ void CDlgMain::upbitBTCPrice(QString price)
     }
 }
 
-void CDlgMain::binanceBTCPrice(QString imessage)
+void CDlgMain::slotBinanceOrderbook(QString imessage)
 {
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
     auto data = json_doc.object()["data"].toObject();
@@ -188,7 +188,7 @@ void CDlgMain::binanceBTCPrice(QString imessage)
     }
 }
 
-void CDlgMain::binanceFuturesBTCPrice(QString imessage)
+void CDlgMain::slotBinanceFuturesOrderbook(QString imessage)
 {
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
     auto data = json_doc.object()["data"].toObject();
@@ -270,5 +270,5 @@ void CDlgMain::slotPairChanged(QListWidgetItem *item) {
 
 void CDlgMain::slotUpbitTicker(QString message)
 {
-    emit sigLog1(message);
+    emit sigLog1(tr("업비트 현재가: %1").arg(message));
 }

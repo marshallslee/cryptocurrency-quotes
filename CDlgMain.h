@@ -33,10 +33,8 @@ private:
 signals:
     void sigLog1(QString);
     void sigCurrentPairChange(QString);
-    void sigUpbitTextLabel(QString);
-    void sigUpbitTicker(QString);
-    void sigBinanceTextLabel(QString);
-    void sigBinanceFuturesTextLabel(QString);
+    void sigBinanceOrderbook(QString);
+    void sigBinanceFuturesOrderbook(QString);
 
 private slots:
     void slotBtnStart(void);
@@ -44,10 +42,10 @@ private slots:
 
 public slots:
     void slotLog1(QString iStr);
-    void upbitBTCPrice(QString price);
+    void slotUpbitOrderbook(QString price);
     void slotUpbitTicker(QString);
-    void binanceBTCPrice(QString price);
-    void binanceFuturesBTCPrice(QString price);
+    void slotBinanceOrderbook(QString price);
+    void slotBinanceFuturesOrderbook(QString price);
     void slotCreatePairsUpbit(Pairs_um*);
     void slotCreatePairsBinance(Pairs_um*);
     void slotCreatePairsBinanceFutures(Pairs_um*);

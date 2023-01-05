@@ -50,19 +50,19 @@ public slots:
 
 private:
     // 호가창에 표시할 아이템 수
-    const int numQuotes = 15;
+    const int mNumQuotes = 15;
 
     // 매도 컬럼 인덱스
-    const int colAsk = 0;
+    const int mColAsk = 0;
 
     // 호가 컬럼 인덱스
-    const int colPrice = 1;
+    const int mColPrice = 1;
 
     // 매수 컬럼 인덱스
-    const int colBid = 2;
+    const int mColBid = 2;
 
     // 각 호가창 테이블별 row count
-    int tblRowCount  = 0;
+    int mTblRowCount  = 0;
 
     QString mCurrentUpbitPair = "KRW-BTC";
 
@@ -71,23 +71,23 @@ public:
     std::unique_ptr<CThMktBinance> mpThMktBinance;
     std::unique_ptr<CThMktBinanceFutures> mpThMktBinanceFutures;
 
-    QTableWidgetItem *askPriceItemUpbit;
-    QTableWidgetItem *askSizeItemUpbit;
-    QTableWidgetItem *bidPriceItemUpbit;
-    QTableWidgetItem *bidSizeItemUpbit;
+    QTableWidgetItem *mpAskPriceItemUpbit;
+    QTableWidgetItem *mpAskSizeItemUpbit;
+    QTableWidgetItem *mpBidPriceItemUpbit;
+    QTableWidgetItem *mpBidSizeItemUpbit;
 
-    QTableWidgetItem *askPriceItemBinance;
-    QTableWidgetItem *askSizeItemBinance;
-    QTableWidgetItem *bidPriceItemBinance;
-    QTableWidgetItem *bidSizeItemBinance;
+    QTableWidgetItem *mpAskPriceItemBinance;
+    QTableWidgetItem *mpAskSizeItemBinance;
+    QTableWidgetItem *mpBidPriceItemBinance;
+    QTableWidgetItem *mpBidSizeItemBinance;
 
-    QTableWidgetItem *askPriceItemBinanceFutures;
-    QTableWidgetItem *askSizeItemBinanceFutures;
-    QTableWidgetItem *bidPriceItemBinanceFutures;
-    QTableWidgetItem *bidSizeItemBinanceFutures;
+    QTableWidgetItem *mpAskPriceItemBinanceFutures;
+    QTableWidgetItem *mpAskSizeItemBinanceFutures;
+    QTableWidgetItem *mpBidPriceItemBinanceFutures;
+    QTableWidgetItem *mpBidSizeItemBinanceFutures;
 
-    Pairs_um* upbitPairs;
-    Pairs_um* binancePairs;
-    Pairs_um* binanceFuturesPairs;
+    Pairs_um* mpUpbitPairs;
+    Pairs_um* mpBinancePairs;
+    Pairs_um* mpBinanceFuturesPairs;
 };
 #endif // CDLGMAIN_H

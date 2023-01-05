@@ -33,7 +33,7 @@ CDlgMain::CDlgMain(QWidget *parent)
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigBinanceFuturesOrderbook(QString)), this, SLOT(slotBinanceFuturesOrderbook(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigCreatePairsBinanceFutures(Pairs_um*)), this, SLOT(slotCreatePairsBinanceFutures(Pairs_um*)), Qt::QueuedConnection);
 
-    tblRowCount = ui->tUpbitPrice->rowCount();
+    mTblRowCount = ui->tUpbitPrice->rowCount();
     ui->tUpbitPrice->setColumnWidth(0, 80);
     ui->tUpbitPrice->setColumnWidth(1, 80);
     ui->tUpbitPrice->setColumnWidth(2, 80);
@@ -46,20 +46,20 @@ CDlgMain::CDlgMain(QWidget *parent)
     ui->tBinanceFuturesPrice->setColumnWidth(1, 80);
     ui->tBinanceFuturesPrice->setColumnWidth(2, 80);
 
-    askPriceItemUpbit = new QTableWidgetItem[numQuotes];
-    askSizeItemUpbit = new QTableWidgetItem[numQuotes];
-    bidPriceItemUpbit = new QTableWidgetItem[numQuotes];
-    bidSizeItemUpbit = new QTableWidgetItem[numQuotes];
+    mpAskPriceItemUpbit = new QTableWidgetItem[mNumQuotes];
+    mpAskSizeItemUpbit = new QTableWidgetItem[mNumQuotes];
+    mpBidPriceItemUpbit = new QTableWidgetItem[mNumQuotes];
+    mpBidSizeItemUpbit = new QTableWidgetItem[mNumQuotes];
 
-    askPriceItemBinance = new QTableWidgetItem[numQuotes];
-    askSizeItemBinance = new QTableWidgetItem[numQuotes];
-    bidPriceItemBinance = new QTableWidgetItem[numQuotes];
-    bidSizeItemBinance = new QTableWidgetItem[numQuotes];
+    mpAskPriceItemBinance = new QTableWidgetItem[mNumQuotes];
+    mpAskSizeItemBinance = new QTableWidgetItem[mNumQuotes];
+    mpBidPriceItemBinance = new QTableWidgetItem[mNumQuotes];
+    mpBidSizeItemBinance = new QTableWidgetItem[mNumQuotes];
 
-    askPriceItemBinanceFutures = new QTableWidgetItem[numQuotes];
-    askSizeItemBinanceFutures = new QTableWidgetItem[numQuotes];
-    bidPriceItemBinanceFutures = new QTableWidgetItem[numQuotes];
-    bidSizeItemBinanceFutures = new QTableWidgetItem[numQuotes];
+    mpAskPriceItemBinanceFutures = new QTableWidgetItem[mNumQuotes];
+    mpAskSizeItemBinanceFutures = new QTableWidgetItem[mNumQuotes];
+    mpBidPriceItemBinanceFutures = new QTableWidgetItem[mNumQuotes];
+    mpBidSizeItemBinanceFutures = new QTableWidgetItem[mNumQuotes];
 
     QFont upbitFont = ui->tUpbitPrice->font();
     upbitFont.setPointSize(10);
@@ -90,42 +90,42 @@ CDlgMain::CDlgMain(QWidget *parent)
     header->setSectionResizeMode(QHeaderView::Fixed);
     header->setDefaultSectionSize(10);
 
-    for(int i=0; i<numQuotes; ++i)
+    for(int i=0; i<mNumQuotes; ++i)
     {
-        ui->tUpbitPrice->setItem(tblRowCount-(i + numQuotes + 1), colAsk, askSizeItemUpbit + i);
-        ui->tUpbitPrice->setItem(tblRowCount-(i + numQuotes + 1), colPrice, askPriceItemUpbit + i);
-        ui->tUpbitPrice->setItem(tblRowCount-(numQuotes - i), colPrice, bidPriceItemUpbit + i);
-        ui->tUpbitPrice->setItem(tblRowCount-(numQuotes - i), colBid, bidSizeItemUpbit + i);
+        ui->tUpbitPrice->setItem(mTblRowCount-(i + mNumQuotes + 1), mColAsk, mpAskSizeItemUpbit + i);
+        ui->tUpbitPrice->setItem(mTblRowCount-(i + mNumQuotes + 1), mColPrice, mpAskPriceItemUpbit + i);
+        ui->tUpbitPrice->setItem(mTblRowCount-(mNumQuotes - i), mColPrice, mpBidPriceItemUpbit + i);
+        ui->tUpbitPrice->setItem(mTblRowCount-(mNumQuotes - i), mColBid, mpBidSizeItemUpbit + i);
 
-        ui->tBinancePrice->setItem(tblRowCount-(i + numQuotes + 1), colAsk, askSizeItemBinance + i);
-        ui->tBinancePrice->setItem(tblRowCount-(i + numQuotes + 1), colPrice, askPriceItemBinance + i);
-        ui->tBinancePrice->setItem(tblRowCount-(numQuotes - i), colPrice, bidPriceItemBinance + i);
-        ui->tBinancePrice->setItem(tblRowCount-(numQuotes - i), colBid, bidSizeItemBinance + i);
+        ui->tBinancePrice->setItem(mTblRowCount-(i + mNumQuotes + 1), mColAsk, mpAskSizeItemBinance + i);
+        ui->tBinancePrice->setItem(mTblRowCount-(i + mNumQuotes + 1), mColPrice, mpAskPriceItemBinance + i);
+        ui->tBinancePrice->setItem(mTblRowCount-(mNumQuotes - i), mColPrice, mpBidPriceItemBinance + i);
+        ui->tBinancePrice->setItem(mTblRowCount-(mNumQuotes - i), mColBid, mpBidSizeItemBinance + i);
 
-        ui->tBinanceFuturesPrice->setItem(tblRowCount-(i + numQuotes + 1), colAsk, askSizeItemBinanceFutures + i);
-        ui->tBinanceFuturesPrice->setItem(tblRowCount-(i + numQuotes + 1), colPrice, askPriceItemBinanceFutures + i);
-        ui->tBinanceFuturesPrice->setItem(tblRowCount-(numQuotes - i), colPrice, bidPriceItemBinanceFutures + i);
-        ui->tBinanceFuturesPrice->setItem(tblRowCount-(numQuotes - i), colBid, bidSizeItemBinanceFutures + i);
+        ui->tBinanceFuturesPrice->setItem(mTblRowCount-(i + mNumQuotes + 1), mColAsk, mpAskSizeItemBinanceFutures + i);
+        ui->tBinanceFuturesPrice->setItem(mTblRowCount-(i + mNumQuotes + 1), mColPrice, mpAskPriceItemBinanceFutures + i);
+        ui->tBinanceFuturesPrice->setItem(mTblRowCount-(mNumQuotes - i), mColPrice, mpBidPriceItemBinanceFutures + i);
+        ui->tBinanceFuturesPrice->setItem(mTblRowCount-(mNumQuotes - i), mColBid, mpBidSizeItemBinanceFutures + i);
     }
 }
 
 // Destructor - 클래스 인스턴스가 종료/파괴
 CDlgMain::~CDlgMain()
 {
-    delete[] askPriceItemUpbit;
-    delete[] askSizeItemUpbit;
-    delete[] bidPriceItemUpbit;
-    delete[] bidSizeItemUpbit;
+    delete[] mpAskPriceItemUpbit;
+    delete[] mpAskSizeItemUpbit;
+    delete[] mpBidPriceItemUpbit;
+    delete[] mpBidSizeItemUpbit;
 
-    delete[] askPriceItemBinance;
-    delete[] askSizeItemBinance;
-    delete[] bidPriceItemBinance;
-    delete[] bidSizeItemBinance;
+    delete[] mpAskPriceItemBinance;
+    delete[] mpAskSizeItemBinance;
+    delete[] mpBidPriceItemBinance;
+    delete[] mpBidSizeItemBinance;
 
-    delete[] askPriceItemBinanceFutures;
-    delete[] askSizeItemBinanceFutures;
-    delete[] bidPriceItemBinanceFutures;
-    delete[] bidSizeItemBinanceFutures;
+    delete[] mpAskPriceItemBinanceFutures;
+    delete[] mpAskSizeItemBinanceFutures;
+    delete[] mpBidPriceItemBinanceFutures;
+    delete[] mpBidSizeItemBinanceFutures;
     delete ui;
 }
 
@@ -159,10 +159,10 @@ void CDlgMain::slotUpbitOrderbook(QString price)
         auto bid_size = tempItem["bs"].toDouble();
         QString strBidSize = locale.toString(bid_size, 'f', 3);
 
-        ui->tUpbitPrice->item(tblRowCount - (i + numQuotes + 1), colAsk)->setText(strAskSize);
-        ui->tUpbitPrice->item(tblRowCount - (i + numQuotes + 1), colPrice)->setText(strAskPrice);
-        ui->tUpbitPrice->item(tblRowCount - (numQuotes - i), colPrice)->setText(strBidPrice);
-        ui->tUpbitPrice->item(tblRowCount - (numQuotes - i), colBid)->setText(strBidSize);
+        ui->tUpbitPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColAsk)->setText(strAskSize);
+        ui->tUpbitPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColPrice)->setText(strAskPrice);
+        ui->tUpbitPrice->item(mTblRowCount - (mNumQuotes - i), mColPrice)->setText(strBidPrice);
+        ui->tUpbitPrice->item(mTblRowCount - (mNumQuotes - i), mColBid)->setText(strBidSize);
     }
 }
 
@@ -174,17 +174,17 @@ void CDlgMain::slotBinanceOrderbook(QString imessage)
     auto bidData = data["bids"].toArray();
 
     QLocale locale(QLocale::English);
-    for(int i=0; i<numQuotes; ++i)
+    for(int i=0; i<mNumQuotes; ++i)
     {
         auto ask_price = askData[i][0];
         auto ask_size = askData[i][1];
         auto bid_price = bidData[i][0];
         auto bid_size = bidData[i][1];
 
-        ui->tBinancePrice->item(tblRowCount - (i + numQuotes + 1), colAsk)->setText(ask_size.toString());
-        ui->tBinancePrice->item(tblRowCount - (i + numQuotes + 1), colPrice)->setText(ask_price.toString());
-        ui->tBinancePrice->item(tblRowCount - (numQuotes - i), colPrice)->setText(bid_price.toString());
-        ui->tBinancePrice->item(tblRowCount - (numQuotes - i), colBid)->setText(bid_size.toString());
+        ui->tBinancePrice->item(mTblRowCount - (i + mNumQuotes + 1), mColAsk)->setText(ask_size.toString());
+        ui->tBinancePrice->item(mTblRowCount - (i + mNumQuotes + 1), mColPrice)->setText(ask_price.toString());
+        ui->tBinancePrice->item(mTblRowCount - (mNumQuotes - i), mColPrice)->setText(bid_price.toString());
+        ui->tBinancePrice->item(mTblRowCount - (mNumQuotes - i), mColBid)->setText(bid_size.toString());
     }
 }
 
@@ -196,17 +196,17 @@ void CDlgMain::slotBinanceFuturesOrderbook(QString imessage)
     auto bidData = data["b"].toArray();
 
     QLocale locale(QLocale::English);
-    for(int i=0; i<numQuotes; ++i)
+    for(int i=0; i<mNumQuotes; ++i)
     {
         auto ask_price = askData[i][0];
         auto ask_size = askData[i][1];
         auto bid_price = bidData[i][0];
         auto bid_size = bidData[i][1];
 
-        ui->tBinanceFuturesPrice->item(tblRowCount - (i + numQuotes + 1), colAsk)->setText(ask_size.toString());
-        ui->tBinanceFuturesPrice->item(tblRowCount - (i + numQuotes + 1), colPrice)->setText(ask_price.toString());
-        ui->tBinanceFuturesPrice->item(tblRowCount - (numQuotes - i), colPrice)->setText(bid_price.toString());
-        ui->tBinanceFuturesPrice->item(tblRowCount - (numQuotes - i), colBid)->setText(bid_size.toString());
+        ui->tBinanceFuturesPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColAsk)->setText(ask_size.toString());
+        ui->tBinanceFuturesPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColPrice)->setText(ask_price.toString());
+        ui->tBinanceFuturesPrice->item(mTblRowCount - (mNumQuotes - i), mColPrice)->setText(bid_price.toString());
+        ui->tBinanceFuturesPrice->item(mTblRowCount - (mNumQuotes - i), mColBid)->setText(bid_size.toString());
     }
 }
 
@@ -220,11 +220,11 @@ void CDlgMain::slotLog1(QString iStr)
 
 void CDlgMain::slotCreatePairsUpbit(Pairs_um* pairs)
 {
-    upbitPairs = pairs;
+    mpUpbitPairs = pairs;
 
     ui->upbitPairList->clear();
 
-    for (auto item : *upbitPairs)
+    for (auto item : *mpUpbitPairs)
     {
         ui->upbitPairList->addItem(QString(item.second.name));
     }
@@ -234,11 +234,11 @@ void CDlgMain::slotCreatePairsUpbit(Pairs_um* pairs)
 
 void CDlgMain::slotCreatePairsBinance(Pairs_um* pairs)
 {
-    binancePairs = pairs;
+    mpBinancePairs = pairs;
 
     ui->binancePairList->clear();
 
-    for (auto item : *binancePairs) {
+    for (auto item : *mpBinancePairs) {
         ui->binancePairList->addItem(QString(item.second.name));
     }
 
@@ -247,11 +247,11 @@ void CDlgMain::slotCreatePairsBinance(Pairs_um* pairs)
 
 void CDlgMain::slotCreatePairsBinanceFutures(Pairs_um* pairs)
 {
-    binanceFuturesPairs = pairs;
+    mpBinanceFuturesPairs = pairs;
 
     ui->binanceFuturesPairList->clear();
 
-    for (auto item : *binanceFuturesPairs)
+    for (auto item : *mpBinanceFuturesPairs)
     {
         ui->binanceFuturesPairList->addItem(QString(item.second.name));
     }

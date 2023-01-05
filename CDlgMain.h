@@ -33,8 +33,6 @@ private:
 signals:
     void sigLog1(QString);
     void sigCurrentPairChange(QString);
-    void sigBinanceOrderbook(QString);
-    void sigBinanceFuturesOrderbook(QString);
 
 private slots:
     void slotBtnStart(void);

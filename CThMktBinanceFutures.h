@@ -28,7 +28,7 @@ protected:
 
 signals:
     void sigLog1(QString);
-    void sigBinanceFuturesTextLabel(QString);
+    void sigBinanceFuturesOrderbook(QString);
     void sigConnectWS();
     void sigGetAllBinanceFuturesPairs();
     void sigCreatePairsBinanceFutures(Pairs_um*);

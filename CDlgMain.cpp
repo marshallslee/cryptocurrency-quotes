@@ -273,5 +273,39 @@ void CDlgMain::slotUpbitTicker(QString imessage)
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
     QString marketCode = json_doc.object()["cd"].toString();
     QString tradePrice = json_doc.object()["tp"].toVariant().toString();
+
     emit sigLog1(tr("[업비트] 종목코드: %1, 현재가: %2").arg(marketCode).arg(tradePrice));
+
+    QTableWidgetItem *tblAskPrice = ui->tUpbitPrice->item(mNumQuotes-1, 1);
+    QString strAskPrice = tblAskPrice->data(0).toString().remove(",");
+
+    QTableWidgetItem *tblBidPrice = ui->tUpbitPrice->item(mNumQuotes, 1);
+    QString strBidPrice = tblBidPrice->data(0).toString().remove(",");
+
+    if(tblAskPrice != nullptr && tblBidPrice != nullptr)
+    {
+        if(strAskPrice == tradePrice)
+        {
+            tblAskPrice->setBackground(QBrush(QColor(0, 0, 255)));
+            tblAskPrice->setForeground(QBrush(QColor(255, 255, 255)));
+            tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
+        }
+
+        else if(strBidPrice == tradePrice)
+        {
+            tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+            tblBidPrice->setBackground(QBrush(QColor(0, 0, 255)));
+            tblBidPrice->setForeground(QBrush(QColor(255, 255, 255)));
+        }
+
+        else
+        {
+            tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+            tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
+        }
+    }
 }

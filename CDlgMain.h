@@ -12,13 +12,6 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class CDlgMain; }
 QT_END_NAMESPACE
 
-enum class OrderToThread
-{
-    Clean = 1,
-    Wash = 2,
-    Shop = 3,
-};
-
 class CDlgMain : public QMainWindow
 {
     Q_OBJECT

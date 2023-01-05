@@ -24,7 +24,7 @@ protected:
 
 signals:
     void sigLog1(QString);
-    void sigUpbitTextLabel(QString);
+    void sigUpbitOrderbook(QString);
     // Mkt API
     void sigGETPairAll();
     // to WS

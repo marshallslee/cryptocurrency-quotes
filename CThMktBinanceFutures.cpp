@@ -120,7 +120,7 @@ void CThMktBinanceFutures::onTextMessageReceived(QString imessage)
 
     if (stream == "btcusdt@depth20@100ms")
     {
-        emit sigBinanceFuturesTextLabel(imessage);
+        emit sigBinanceFuturesOrderbook(imessage);
     }
 }
 

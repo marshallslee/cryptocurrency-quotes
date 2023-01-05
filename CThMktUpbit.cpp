@@ -215,7 +215,7 @@ void CThMktUpbit::onTextMessageReceived(QString imessage)
         // 호가 데이터를 수신하는 경우
         if (dataType == "orderbook")
         {
-            emit sigUpbitTextLabel(imessage);
+            emit sigUpbitOrderbook(imessage);
 
             if (imessage.indexOf("orderbook") > 0)
             {
@@ -226,8 +226,7 @@ void CThMktUpbit::onTextMessageReceived(QString imessage)
         // 현재가 데이터를 수신하는 경우
         else if (dataType == "ticker")
         {
-            QString tradePrice = json_doc.object()["tp"].toVariant().toString();
-            emit sigUpbitTicker(tradePrice);
+            emit sigUpbitTicker(imessage);
 
             if (imessage.indexOf("ticker") > 0)
             {

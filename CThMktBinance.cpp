@@ -4,7 +4,7 @@ using namespace std;
 
 CThMktBinance::CThMktBinance()
 {
-    mBinanceWS_Url = "wss://stream.binance.com:9443/stream?streams=btcusdt@depth20@100ms";
+    mBinanceWS_Url = "wss://stream.binance.com:9443/stream?streams=" + mStream;
 
     QObject::connect(&mBinanceWS, &QWebSocket::connected, this, &CThMktBinance::onConnected);
     QObject::connect(&mBinanceWS, &QWebSocket::disconnected, this, &CThMktBinance::onDisconnected);
@@ -103,6 +103,14 @@ void CThMktBinance::connectWS(void)
     mBinanceWS.open(mBinanceWS_Url);
 }
 
+void CThMktBinance::reconnectWS(void)
+{
+    emit sigLog1(tr("Connecting to %1").arg(mBinanceWS_Url.toString()));
+    // 여기다가 reconnect 하는 로직을 구현
+    mBinanceWS.close();
+    mBinanceWS.open(mBinanceWS_Url);
+}
+
 void CThMktBinance::onConnected(void)
 {
     emit sigLog1("WS Binance Connected");
@@ -118,10 +126,7 @@ void CThMktBinance::onTextMessageReceived(QString imessage)
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
     auto stream = json_doc.object()["stream"].toString();
 
-    if (stream == "btcusdt@depth20@100ms")
-    {
-        emit sigBinanceOrderbook(imessage);
-    }
+    emit sigBinanceOrderbook(imessage);
 }
 
 void CThMktBinance::onPongReceived(quint64, const QByteArray&)
@@ -176,4 +181,10 @@ void CThMktBinance::getAllBinancePairs()
         });
         iManager->get(request);
     }
+}
+
+void CThMktBinance::setStream(QString stream)
+{
+    mStream = stream;
+    mBinanceWS_Url = "wss://stream.binance.com:9443/stream?streams=" + mStream;
 }

@@ -263,7 +263,7 @@ void CDlgMain::slotUpbitPairChanged(QListWidgetItem *item) {
     QStringList tokens = pair.split(u'/'); // ["BTC", "/", "KRW"]
 
     pair = tokens.at(1) + "-" + tokens.at(0); // KRW-BTC
-    emit sigLog1(pair);
+    emit sigLog1(tr("[업비트] 현재 수신중인 종목 코드가 %1로 변경되었습니다.").arg(pair));
     mpThMktUpbit->mCurrentPair = pair;
 }
 
@@ -307,4 +307,15 @@ void CDlgMain::slotUpbitTicker(QString imessage)
             tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
         }
     }
+}
+
+void CDlgMain::slotBinancePairChanged(QListWidgetItem *item) {
+    QString pair = item->text();  // BTC/KRW와 같은 형식으로 페어명을 가져옴
+    QStringList tokens = pair.split(u'/'); // ["BTC", "/", "KRW"]
+
+    pair = tokens.at(0).toLower() + tokens.at(1).toLower(); // 예시: btcusdt
+
+    mpThMktBinance->setStream(pair + "@depth20@100ms");
+    mpThMktBinance->reconnectWS();
+    emit sigLog1(tr("[바이낸스] 현재 수신 스트림이 %1로 변경되었습니다.").arg(mpThMktBinance->mStream));
 }

@@ -29,6 +29,7 @@ signals:
 private slots:
     void slotBtnStart(void);
     void slotUpbitPairChanged(QListWidgetItem*);
+    void slotBinancePairChanged(QListWidgetItem *item);
 
 public slots:
     void slotLog1(QString iStr);

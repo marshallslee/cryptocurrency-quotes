@@ -22,7 +22,6 @@ CDlgMain::CDlgMain(QWidget *parent)
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigUpbitOrderbook(QString)), this, SLOT(slotUpbitOrderbook(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigCreatePairsUpbit(Pairs_um*)), this, SLOT(slotCreatePairsUpbit(Pairs_um*)), Qt::QueuedConnection);
-    QObject::connect(mpThMktUpbit.get(), SIGNAL(sigCurrentPairChange(QString)), this, SLOT(slotCurrentPairChange(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigUpbitTicker(QString)), this, SLOT(slotUpbitTicker(QString)), Qt::QueuedConnection);
 
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
@@ -259,7 +258,7 @@ void CDlgMain::slotCreatePairsBinanceFutures(Pairs_um* pairs)
     ui->binanceFuturesPairList->sortItems(Qt::AscendingOrder);
 }
 
-void CDlgMain::slotPairChanged(QListWidgetItem *item) {
+void CDlgMain::slotUpbitPairChanged(QListWidgetItem *item) {
     QString pair = item->text();  // BTC/KRW와 같은 형식으로 페어명을 가져옴
     QStringList tokens = pair.split(u'/'); // ["BTC", "/", "KRW"]
 

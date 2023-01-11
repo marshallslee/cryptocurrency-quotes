@@ -29,6 +29,7 @@ signals:
     void sigGetAllBinancePairs();
     void sigConnectWS();
     void sigCreatePairsBinance(Pairs_um*);
+    void sigBinanceChangeStream();
 
 public slots:
     void slotTimer500mSec(void);
@@ -36,6 +37,7 @@ public slots:
 
     // to WS
     void connectWS(void);
+    void reconnectWS(void);
 
 private:
     BinanceStatus_en mBinanceStatus = BinanceStatus_en::Init;
@@ -61,11 +63,15 @@ public: // WebSocket
     QWebSocket mBinanceWS;
     int64_t mCntObu = 0, mCntTrade = 0, mCntTicker = 0;
     bool mbStartCnt = false;
+    QString mCurrentPair = "btcusdt";
+    QString mStream = mCurrentPair + "@depth20@100ms";
 
     void onConnected(void);
     void onDisconnected(void);
     void onTextMessageReceived(QString imessage);
     void onPongReceived(quint64, const QByteArray&);
+
+    void setStream(QString);
 };
 
 #endif // CTHMKTBINANCE_H

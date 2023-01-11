@@ -356,7 +356,7 @@
    <sender>upbitPairList</sender>
    <signal>itemDoubleClicked(QListWidgetItem*)</signal>
    <receiver>CDlgMain</receiver>
-   <slot>slotPairChanged(QListWidgetItem*)</slot>
+   <slot>slotUpbitPairChanged(QListWidgetItem*)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>185</x>
@@ -372,7 +372,7 @@
    <sender>binancePairList</sender>
    <signal>itemDoubleClicked(QListWidgetItem*)</signal>
    <receiver>CDlgMain</receiver>
-   <slot>slotPairChanged(QListWidgetItem*)</slot>
+   <slot>slotBinancePairChanged(QListWidgetItem*)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>455</x>
@@ -388,7 +388,7 @@
    <sender>binanceFuturesPairList</sender>
    <signal>itemDoubleClicked(QListWidgetItem*)</signal>
    <receiver>CDlgMain</receiver>
-   <slot>slotPairChanged(QListWidgetItem*)</slot>
+   <slot>slotBinanceFuturesPairChanged(QListWidgetItem*)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>725</x>
@@ -403,6 +403,8 @@
  </connections>
  <slots>
   <slot>slotBtnStart()</slot>
-  <slot>slotPairChanged(QListWidgetItem*)</slot>
+  <slot>slotUpbitPairChanged(QListWidgetItem*)</slot>
+  <slot>slotBinancePairChanged(QListWidgetItem*)</slot>
+  <slot>slotBinanceFuturesPairChanged(QListWidgetItem*)</slot>
  </slots>
 </ui>

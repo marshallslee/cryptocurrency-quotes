@@ -22,7 +22,6 @@ CDlgMain::CDlgMain(QWidget *parent)
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigUpbitOrderbook(QString)), this, SLOT(slotUpbitOrderbook(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigCreatePairsUpbit(Pairs_um*)), this, SLOT(slotCreatePairsUpbit(Pairs_um*)), Qt::QueuedConnection);
-    QObject::connect(mpThMktUpbit.get(), SIGNAL(sigCurrentPairChange(QString)), this, SLOT(slotCurrentPairChange(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktUpbit.get(), SIGNAL(sigUpbitTicker(QString)), this, SLOT(slotUpbitTicker(QString)), Qt::QueuedConnection);
 
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
@@ -259,12 +258,12 @@ void CDlgMain::slotCreatePairsBinanceFutures(Pairs_um* pairs)
     ui->binanceFuturesPairList->sortItems(Qt::AscendingOrder);
 }
 
-void CDlgMain::slotPairChanged(QListWidgetItem *item) {
+void CDlgMain::slotUpbitPairChanged(QListWidgetItem *item) {
     QString pair = item->text();  // BTC/KRW와 같은 형식으로 페어명을 가져옴
     QStringList tokens = pair.split(u'/'); // ["BTC", "/", "KRW"]
 
     pair = tokens.at(1) + "-" + tokens.at(0); // KRW-BTC
-    emit sigLog1(pair);
+    emit sigLog1(tr("[업비트] 현재 수신중인 종목 코드가 %1로 변경되었습니다.").arg(pair));
     mpThMktUpbit->mCurrentPair = pair;
 }
 
@@ -273,5 +272,50 @@ void CDlgMain::slotUpbitTicker(QString imessage)
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
     QString marketCode = json_doc.object()["cd"].toString();
     QString tradePrice = json_doc.object()["tp"].toVariant().toString();
+
     emit sigLog1(tr("[업비트] 종목코드: %1, 현재가: %2").arg(marketCode).arg(tradePrice));
+
+    QTableWidgetItem *tblAskPrice = ui->tUpbitPrice->item(mNumQuotes-1, 1);
+    QString strAskPrice = tblAskPrice->data(0).toString().remove(",");
+
+    QTableWidgetItem *tblBidPrice = ui->tUpbitPrice->item(mNumQuotes, 1);
+    QString strBidPrice = tblBidPrice->data(0).toString().remove(",");
+
+    if(tblAskPrice != nullptr && tblBidPrice != nullptr)
+    {
+        if(strAskPrice == tradePrice)
+        {
+            tblAskPrice->setBackground(QBrush(QColor(0, 0, 255)));
+            tblAskPrice->setForeground(QBrush(QColor(255, 255, 255)));
+            tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
+        }
+
+        else if(strBidPrice == tradePrice)
+        {
+            tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+            tblBidPrice->setBackground(QBrush(QColor(0, 0, 255)));
+            tblBidPrice->setForeground(QBrush(QColor(255, 255, 255)));
+        }
+
+        else
+        {
+            tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+            tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
+        }
+    }
+}
+
+void CDlgMain::slotBinancePairChanged(QListWidgetItem *item) {
+    QString pair = item->text();  // BTC/KRW와 같은 형식으로 페어명을 가져옴
+    QStringList tokens = pair.split(u'/'); // ["BTC", "/", "KRW"]
+
+    pair = tokens.at(0).toLower() + tokens.at(1).toLower(); // 예시: btcusdt
+
+    mpThMktBinance->setStream(pair + "@depth20@100ms");
+    mpThMktBinance->reconnectWS();
+    emit sigLog1(tr("[바이낸스] 현재 수신 스트림이 %1로 변경되었습니다.").arg(mpThMktBinance->mStream));
 }

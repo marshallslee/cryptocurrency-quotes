@@ -25,11 +25,11 @@ private:
 
 signals:
     void sigLog1(QString);
-    void sigCurrentPairChange(QString);
 
 private slots:
     void slotBtnStart(void);
-    void slotPairChanged(QListWidgetItem*);
+    void slotUpbitPairChanged(QListWidgetItem*);
+    void slotBinancePairChanged(QListWidgetItem *item);
 
 public slots:
     void slotLog1(QString iStr);

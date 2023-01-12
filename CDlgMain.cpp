@@ -319,3 +319,13 @@ void CDlgMain::slotBinancePairChanged(QListWidgetItem *item) {
     mpThMktBinance->reconnectWS();
     emit sigLog1(tr("[바이낸스] 현재 수신 스트림이 %1로 변경되었습니다.").arg(mpThMktBinance->mStream));
 }
+
+void CDlgMain::slotBinanceFuturesPairChanged(QListWidgetItem *item) {
+    QString pair = item->text();  // BTC/KRW와 같은 형식으로 페어명을 가져옴
+    QStringList tokens = pair.split(u'/'); // ["BTC", "/", "KRW"]
+
+    pair = tokens.at(0).toLower() + tokens.at(1).toLower(); // 예시: btcusdt
+
+    mpThMktBinanceFutures->setStream(pair + "@depth20@100ms");
+    mpThMktBinanceFutures->reconnectWS();
+}

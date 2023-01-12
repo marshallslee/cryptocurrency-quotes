@@ -29,7 +29,6 @@ signals:
     void sigGetAllBinancePairs();
     void sigConnectWS();
     void sigCreatePairsBinance(Pairs_um*);
-    void sigBinanceChangeStream();
 
 public slots:
     void slotTimer500mSec(void);

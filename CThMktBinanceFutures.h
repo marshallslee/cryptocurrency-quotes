@@ -39,6 +39,7 @@ public slots:
 
     // to WS
     void connectWS(void);
+    void reconnectWS(void);
 
 private:
     BinanceFuturesStatus_en mBinanceFuturesStatus = BinanceFuturesStatus_en::Init;
@@ -63,6 +64,11 @@ public: // WebSocket
     QWebSocket mBinanceFuturesWS;
     int64_t mCntObu = 0, mCntTrade = 0, mCntTicker = 0;
     bool mbStartCnt = false;
+
+    QString mCurrentPair = "btcusdt";
+    QString mStream = mCurrentPair + "@depth20@100ms";
+
+    void setStream(QString);
 
     void onConnected(void);
     void onDisconnected(void);

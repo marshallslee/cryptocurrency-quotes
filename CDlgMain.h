@@ -30,6 +30,7 @@ private slots:
     void slotBtnStart(void);
     void slotUpbitPairChanged(QListWidgetItem*);
     void slotBinancePairChanged(QListWidgetItem *item);
+    void slotBinanceFuturesPairChanged(QListWidgetItem *item);
 
 public slots:
     void slotLog1(QString iStr);

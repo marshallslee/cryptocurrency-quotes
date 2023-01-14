@@ -39,6 +39,7 @@ public slots:
     void slotBinanceOrderbook(QString price);
     void slotBinanceTicker(QString);
     void slotBinanceFuturesOrderbook(QString price);
+    void slotBinanceFuturesTicker(QString);
     void slotCreatePairsUpbit(Pairs_um*);
     void slotCreatePairsBinance(Pairs_um*);
     void slotCreatePairsBinanceFutures(Pairs_um*);

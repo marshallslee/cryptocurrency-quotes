@@ -32,6 +32,7 @@ CDlgMain::CDlgMain(QWidget *parent)
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigBinanceFuturesOrderbook(QString)), this, SLOT(slotBinanceFuturesOrderbook(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigCreatePairsBinanceFutures(Pairs_um*)), this, SLOT(slotCreatePairsBinanceFutures(Pairs_um*)), Qt::QueuedConnection);
+    QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigBinanceFuturesTicker(QString)), this, SLOT(slotBinanceFuturesTicker(QString)), Qt::QueuedConnection);
 
     mTblRowCount = ui->tUpbitPrice->rowCount();
     ui->tUpbitPrice->setColumnWidth(0, 80);
@@ -369,3 +370,43 @@ void CDlgMain::slotBinanceTicker(QString imessage)
         }
     }
 }
+
+void CDlgMain::slotBinanceFuturesTicker(QString imessage)
+{
+    auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
+    auto tradePrice  = json_doc.object()["data"].toObject()["p"].toVariant();
+
+    QTableWidgetItem *tblAskPrice = ui->tBinanceFuturesPrice->item(mNumQuotes-1, 1);
+    QString strAskPrice = tblAskPrice->data(0).toString().remove(",");
+
+    QTableWidgetItem *tblBidPrice = ui->tBinanceFuturesPrice->item(mNumQuotes, 1);
+    QString strBidPrice = tblBidPrice->data(0).toString().remove(",");
+
+    if(tblAskPrice != nullptr && tblBidPrice != nullptr)
+    {
+        if(strAskPrice == tradePrice)
+        {
+            tblAskPrice->setBackground(QBrush(QColor(0, 0, 255)));
+            tblAskPrice->setForeground(QBrush(QColor(255, 255, 255)));
+            tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
+        }
+
+        else if(strBidPrice == tradePrice)
+        {
+            tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+            tblBidPrice->setBackground(QBrush(QColor(0, 0, 255)));
+            tblBidPrice->setForeground(QBrush(QColor(255, 255, 255)));
+        }
+
+        else
+        {
+            tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+            tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
+        }
+    }
+}
+

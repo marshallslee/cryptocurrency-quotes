@@ -29,6 +29,7 @@ signals:
     void sigGetAllBinancePairs();
     void sigConnectWS();
     void sigCreatePairsBinance(Pairs_um*);
+    void sigBinanceTicker(QString);
 
 public slots:
     void slotTimer500mSec(void);
@@ -63,7 +64,7 @@ public: // WebSocket
     int64_t mCntObu = 0, mCntTrade = 0, mCntTicker = 0;
     bool mbStartCnt = false;
     QString mCurrentPair = "btcusdt";
-    QString mStream = mCurrentPair + "@depth20@100ms";
+    QString mStream = mCurrentPair + "@depth20@100ms/" + mCurrentPair + "@aggTrade";
 
     void onConnected(void);
     void onDisconnected(void);

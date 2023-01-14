@@ -126,7 +126,14 @@ void CThMktBinance::onTextMessageReceived(QString imessage)
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
     auto stream = json_doc.object()["stream"].toString();
 
-    emit sigBinanceOrderbook(imessage);
+    if(stream.contains("@depth20@100ms"))
+    {
+        emit sigBinanceOrderbook(imessage);
+    }
+    else if(stream.contains("@aggTrade"))
+    {
+        emit sigBinanceTicker(imessage);
+    }
 }
 
 void CThMktBinance::onPongReceived(quint64, const QByteArray&)

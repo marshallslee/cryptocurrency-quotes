@@ -27,6 +27,7 @@ CDlgMain::CDlgMain(QWidget *parent)
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigBinanceOrderbook(QString)), this, SLOT(slotBinanceOrderbook(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinance.get(), SIGNAL(sigCreatePairsBinance(Pairs_um*)), this, SLOT(slotCreatePairsBinance(Pairs_um*)), Qt::QueuedConnection);
+    QObject::connect(mpThMktBinance.get(), SIGNAL(sigBinanceTicker(QString)), this, SLOT(slotBinanceTicker(QString)), Qt::QueuedConnection);
 
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigLog1(QString)), this, SLOT(slotLog1(QString)), Qt::QueuedConnection);
     QObject::connect(mpThMktBinanceFutures.get(), SIGNAL(sigBinanceFuturesOrderbook(QString)), this, SLOT(slotBinanceFuturesOrderbook(QString)), Qt::QueuedConnection);
@@ -328,4 +329,43 @@ void CDlgMain::slotBinanceFuturesPairChanged(QListWidgetItem *item) {
 
     mpThMktBinanceFutures->setStream(pair + "@depth20@100ms");
     mpThMktBinanceFutures->reconnectWS();
+}
+
+void CDlgMain::slotBinanceTicker(QString imessage)
+{
+    auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
+    auto tradePrice  = json_doc.object()["data"].toObject()["p"].toVariant();
+
+    QTableWidgetItem *tblAskPrice = ui->tBinancePrice->item(mNumQuotes-1, 1);
+    QString strAskPrice = tblAskPrice->data(0).toString().remove(",");
+
+    QTableWidgetItem *tblBidPrice = ui->tBinancePrice->item(mNumQuotes, 1);
+    QString strBidPrice = tblBidPrice->data(0).toString().remove(",");
+
+    if(tblAskPrice != nullptr && tblBidPrice != nullptr)
+    {
+        if(strAskPrice == tradePrice)
+        {
+            tblAskPrice->setBackground(QBrush(QColor(0, 0, 255)));
+            tblAskPrice->setForeground(QBrush(QColor(255, 255, 255)));
+            tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
+        }
+
+        else if(strBidPrice == tradePrice)
+        {
+            tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+            tblBidPrice->setBackground(QBrush(QColor(0, 0, 255)));
+            tblBidPrice->setForeground(QBrush(QColor(255, 255, 255)));
+        }
+
+        else
+        {
+            tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+            tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
+            tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
+        }
+    }
 }

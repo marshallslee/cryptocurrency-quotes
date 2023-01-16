@@ -177,15 +177,20 @@ void CDlgMain::slotBinanceOrderbook(QString imessage)
     QLocale locale(QLocale::English);
     for(int i=0; i<mNumQuotes; ++i)
     {
-        auto ask_price = askData[i][0];
-        auto ask_size = askData[i][1];
-        auto bid_price = bidData[i][0];
-        auto bid_size = bidData[i][1];
+        auto ask_price = askData[i][0].toString().toDouble();
+        auto ask_size = askData[i][1].toString().toDouble();
+        auto bid_price = bidData[i][0].toString().toDouble();
+        auto bid_size = bidData[i][1].toString().toDouble();
 
-        ui->tBinancePrice->item(mTblRowCount - (i + mNumQuotes + 1), mColAsk)->setText(ask_size.toString());
-        ui->tBinancePrice->item(mTblRowCount - (i + mNumQuotes + 1), mColPrice)->setText(ask_price.toString());
-        ui->tBinancePrice->item(mTblRowCount - (mNumQuotes - i), mColPrice)->setText(bid_price.toString());
-        ui->tBinancePrice->item(mTblRowCount - (mNumQuotes - i), mColBid)->setText(bid_size.toString());
+        QString strAskPrice = locale.toString(ask_price, 'f', 2);
+        QString strAskSize = locale.toString(ask_size, 'f', 6);
+        QString strBidPrice = locale.toString(bid_price, 'f', 2);
+        QString strBidSize = locale.toString(bid_size, 'f', 6);
+
+        ui->tBinancePrice->item(mTblRowCount - (i + mNumQuotes + 1), mColAsk)->setText(strAskSize);
+        ui->tBinancePrice->item(mTblRowCount - (i + mNumQuotes + 1), mColPrice)->setText(strAskPrice);
+        ui->tBinancePrice->item(mTblRowCount - (mNumQuotes - i), mColPrice)->setText(strBidPrice);
+        ui->tBinancePrice->item(mTblRowCount - (mNumQuotes - i), mColBid)->setText(strBidSize);
     }
 }
 
@@ -199,15 +204,20 @@ void CDlgMain::slotBinanceFuturesOrderbook(QString imessage)
     QLocale locale(QLocale::English);
     for(int i=0; i<mNumQuotes; ++i)
     {
-        auto ask_price = askData[i][0];
-        auto ask_size = askData[i][1];
-        auto bid_price = bidData[i][0];
-        auto bid_size = bidData[i][1];
+        auto ask_price = askData[i][0].toString().toDouble();
+        auto ask_size = askData[i][1].toString().toDouble();
+        auto bid_price = bidData[i][0].toString().toDouble();
+        auto bid_size = bidData[i][1].toString().toDouble();
 
-        ui->tBinanceFuturesPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColAsk)->setText(ask_size.toString());
-        ui->tBinanceFuturesPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColPrice)->setText(ask_price.toString());
-        ui->tBinanceFuturesPrice->item(mTblRowCount - (mNumQuotes - i), mColPrice)->setText(bid_price.toString());
-        ui->tBinanceFuturesPrice->item(mTblRowCount - (mNumQuotes - i), mColBid)->setText(bid_size.toString());
+        QString strAskPrice = locale.toString(ask_price, 'f', 2);
+        QString strAskSize = locale.toString(ask_size, 'f', 6);
+        QString strBidPrice = locale.toString(bid_price, 'f', 2);
+        QString strBidSize = locale.toString(bid_size, 'f', 6);
+
+        ui->tBinanceFuturesPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColAsk)->setText(strAskSize);
+        ui->tBinanceFuturesPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColPrice)->setText(strAskPrice);
+        ui->tBinanceFuturesPrice->item(mTblRowCount - (mNumQuotes - i), mColPrice)->setText(strBidPrice);
+        ui->tBinanceFuturesPrice->item(mTblRowCount - (mNumQuotes - i), mColBid)->setText(strBidSize);
     }
 }
 
@@ -335,17 +345,20 @@ void CDlgMain::slotBinanceFuturesPairChanged(QListWidgetItem *item) {
 void CDlgMain::slotBinanceTicker(QString imessage)
 {
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
-    auto tradePrice  = json_doc.object()["data"].toObject()["p"].toVariant();
+    auto tradePrice  = json_doc.object()["data"].toObject()["p"].toString().toDouble();
+
+    QLocale locale(QLocale::English);
+    QString strTradePrice = locale.toString(tradePrice, 'f', 2);
 
     QTableWidgetItem *tblAskPrice = ui->tBinancePrice->item(mNumQuotes-1, 1);
-    QString strAskPrice = tblAskPrice->data(0).toString().remove(",");
+    QString strAskPrice = tblAskPrice->data(0).toString();
 
     QTableWidgetItem *tblBidPrice = ui->tBinancePrice->item(mNumQuotes, 1);
-    QString strBidPrice = tblBidPrice->data(0).toString().remove(",");
+    QString strBidPrice = tblBidPrice->data(0).toString();
 
     if(tblAskPrice != nullptr && tblBidPrice != nullptr)
     {
-        if(strAskPrice == tradePrice)
+        if(strAskPrice == strTradePrice)
         {
             tblAskPrice->setBackground(QBrush(QColor(0, 0, 255)));
             tblAskPrice->setForeground(QBrush(QColor(255, 255, 255)));
@@ -353,7 +366,7 @@ void CDlgMain::slotBinanceTicker(QString imessage)
             tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
         }
 
-        else if(strBidPrice == tradePrice)
+        else if(strBidPrice == strTradePrice)
         {
             tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
             tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
@@ -374,17 +387,20 @@ void CDlgMain::slotBinanceTicker(QString imessage)
 void CDlgMain::slotBinanceFuturesTicker(QString imessage)
 {
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
-    auto tradePrice  = json_doc.object()["data"].toObject()["p"].toVariant();
+    auto tradePrice  = json_doc.object()["data"].toObject()["p"].toString().toDouble();
+
+    QLocale locale(QLocale::English);
+    QString strTradePrice = locale.toString(tradePrice, 'f', 2);
 
     QTableWidgetItem *tblAskPrice = ui->tBinanceFuturesPrice->item(mNumQuotes-1, 1);
-    QString strAskPrice = tblAskPrice->data(0).toString().remove(",");
+    QString strAskPrice = tblAskPrice->data(0).toString();
 
     QTableWidgetItem *tblBidPrice = ui->tBinanceFuturesPrice->item(mNumQuotes, 1);
-    QString strBidPrice = tblBidPrice->data(0).toString().remove(",");
+    QString strBidPrice = tblBidPrice->data(0).toString();
 
     if(tblAskPrice != nullptr && tblBidPrice != nullptr)
     {
-        if(strAskPrice == tradePrice)
+        if(strAskPrice == strTradePrice)
         {
             tblAskPrice->setBackground(QBrush(QColor(0, 0, 255)));
             tblAskPrice->setForeground(QBrush(QColor(255, 255, 255)));
@@ -392,7 +408,7 @@ void CDlgMain::slotBinanceFuturesTicker(QString imessage)
             tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
         }
 
-        else if(strBidPrice == tradePrice)
+        else if(strBidPrice == strTradePrice)
         {
             tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
             tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));

@@ -105,7 +105,7 @@ void CThMktBinance::connectWS(void)
 
 void CThMktBinance::reconnectWS(void)
 {
-    emit sigLog1(tr("Connecting to %1").arg(mBinanceWS_Url.toString()));
+    emit sigLog1(tr("[바이낸스] 수신 스트림: %1").arg(mStream));
     // 여기다가 reconnect 하는 로직을 구현
     mBinanceWS.close();
     mBinanceWS.open(mBinanceWS_Url);

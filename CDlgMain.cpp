@@ -327,7 +327,8 @@ void CDlgMain::slotBinancePairChanged(QListWidgetItem *item) {
 
     pair = tokens.at(0).toLower() + tokens.at(1).toLower(); // 예시: btcusdt
 
-    mpThMktBinance->setStream(pair + "@depth20@100ms");
+    QString newStream = tr("%1@depth20@100ms/%2@aggTrade").arg(pair).arg(pair);
+    mpThMktBinance->setStream(newStream);
     mpThMktBinance->reconnectWS();
     emit sigLog1(tr("[바이낸스] 현재 수신 스트림이 %1로 변경되었습니다.").arg(mpThMktBinance->mStream));
 }
@@ -338,7 +339,8 @@ void CDlgMain::slotBinanceFuturesPairChanged(QListWidgetItem *item) {
 
     pair = tokens.at(0).toLower() + tokens.at(1).toLower(); // 예시: btcusdt
 
-    mpThMktBinanceFutures->setStream(pair + "@depth20@100ms");
+    QString newStream = tr("%1@depth20@100ms/%2@aggTrade").arg(pair).arg(pair);
+    mpThMktBinanceFutures->setStream(newStream);
     mpThMktBinanceFutures->reconnectWS();
 }
 

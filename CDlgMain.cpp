@@ -182,10 +182,10 @@ void CDlgMain::slotBinanceOrderbook(QString imessage)
         auto bid_price = bidData[i][0].toString().toDouble();
         auto bid_size = bidData[i][1].toString().toDouble();
 
-        QString strAskPrice = locale.toString(ask_price, 'f', 2);
-        QString strAskSize = locale.toString(ask_size, 'f', 6);
-        QString strBidPrice = locale.toString(bid_price, 'f', 2);
-        QString strBidSize = locale.toString(bid_size, 'f', 6);
+        QString strAskPrice = locale.toString(ask_price);
+        QString strAskSize = locale.toString(ask_size);
+        QString strBidPrice = locale.toString(bid_price);
+        QString strBidSize = locale.toString(bid_size);
 
         ui->tBinancePrice->item(mTblRowCount - (i + mNumQuotes + 1), mColAsk)->setText(strAskSize);
         ui->tBinancePrice->item(mTblRowCount - (i + mNumQuotes + 1), mColPrice)->setText(strAskPrice);
@@ -327,7 +327,8 @@ void CDlgMain::slotBinancePairChanged(QListWidgetItem *item) {
 
     pair = tokens.at(0).toLower() + tokens.at(1).toLower(); // 예시: btcusdt
 
-    mpThMktBinance->setStream(pair + "@depth20@100ms");
+    QString newStream = tr("%1@depth20@100ms/%2@aggTrade").arg(pair).arg(pair);
+    mpThMktBinance->setStream(newStream);
     mpThMktBinance->reconnectWS();
     emit sigLog1(tr("[바이낸스] 현재 수신 스트림이 %1로 변경되었습니다.").arg(mpThMktBinance->mStream));
 }
@@ -338,8 +339,10 @@ void CDlgMain::slotBinanceFuturesPairChanged(QListWidgetItem *item) {
 
     pair = tokens.at(0).toLower() + tokens.at(1).toLower(); // 예시: btcusdt
 
-    mpThMktBinanceFutures->setStream(pair + "@depth20@100ms");
+    QString newStream = tr("%1@depth20@100ms/%2@aggTrade").arg(pair).arg(pair);
+    mpThMktBinanceFutures->setStream(newStream);
     mpThMktBinanceFutures->reconnectWS();
+    emit sigLog1(tr("[바이낸스 선물] 현재 수신 스트림이 %1로 변경되었습니다.").arg(mpThMktBinance->mStream));
 }
 
 void CDlgMain::slotBinanceTicker(QString imessage)
@@ -348,13 +351,15 @@ void CDlgMain::slotBinanceTicker(QString imessage)
     auto tradePrice  = json_doc.object()["data"].toObject()["p"].toString().toDouble();
 
     QLocale locale(QLocale::English);
-    QString strTradePrice = locale.toString(tradePrice, 'f', 2);
+    QString strTradePrice = locale.toString(tradePrice);
 
     QTableWidgetItem *tblAskPrice = ui->tBinancePrice->item(mNumQuotes-1, 1);
     QString strAskPrice = tblAskPrice->data(0).toString();
 
     QTableWidgetItem *tblBidPrice = ui->tBinancePrice->item(mNumQuotes, 1);
     QString strBidPrice = tblBidPrice->data(0).toString();
+
+    emit sigLog1(tr("[바이낸스] 현재가: %1, 매도호가: %2, 매수호가: %3").arg(strTradePrice).arg(strAskPrice).arg(strBidPrice));
 
     if(tblAskPrice != nullptr && tblBidPrice != nullptr)
     {

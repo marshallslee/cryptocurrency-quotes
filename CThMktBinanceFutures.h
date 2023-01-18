@@ -67,7 +67,7 @@ public: // WebSocket
     bool mbStartCnt = false;
 
     QString mCurrentPair = "btcusdt";
-    QString mStream = mCurrentPair + "@depth20@100ms/" + mCurrentPair + "@aggTrade";
+    QString mStream = tr("%1@depth20@100ms/%2@aggTrade").arg(mCurrentPair).arg(mCurrentPair);
 
     void setStream(QString);
 

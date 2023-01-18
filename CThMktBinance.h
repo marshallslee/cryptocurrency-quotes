@@ -64,7 +64,7 @@ public: // WebSocket
     int64_t mCntObu = 0, mCntTrade = 0, mCntTicker = 0;
     bool mbStartCnt = false;
     QString mCurrentPair = "btcusdt";
-    QString mStream = mCurrentPair + "@depth20@100ms/" + mCurrentPair + "@aggTrade";
+    QString mStream = tr("%1@depth20@100ms/%2@aggTrade").arg(mCurrentPair).arg(mCurrentPair);
 
     void onConnected(void);
     void onDisconnected(void);

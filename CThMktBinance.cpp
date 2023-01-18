@@ -166,13 +166,14 @@ void CThMktBinance::getAllBinancePairs()
                         TradingPair_st iPair1;
                         for (int32_t i = 0; i < mCountPairs; ++i)
                         {
-                            iPair1.orgName = sArray1[i].toObject()["symbol"].toString().toLower();
-                            iPair1.quote_symbol = sArray1[i].toObject()["quoteAsset"].toString();
+                            QJsonObject symbolData = sArray1[i].toObject();
+                            iPair1.orgName = symbolData["symbol"].toString().toLower();
+                            iPair1.quote_symbol = symbolData["quoteAsset"].toString();
                             if (iPair1.quote_symbol != "USDT")
                             {
                                 continue;
                             }
-                            iPair1.base_symbol = sArray1[i].toObject()["baseAsset"].toString();
+                            iPair1.base_symbol = symbolData["baseAsset"].toString();
                             iPair1.name = iPair1.base_symbol + tr("/") + iPair1.quote_symbol;
                             mBinancePairs_um[iPair1.orgName] = iPair1;
                             ++mSubsPairs;

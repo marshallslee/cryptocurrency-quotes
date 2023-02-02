@@ -272,11 +272,22 @@ void CDlgMain::slotCreatePairsBinanceFutures(Pairs_um* pairs)
 
 void CDlgMain::slotUpbitPairChanged(QListWidgetItem *item) {
     QString pair = item->text();  // BTC/KRW와 같은 형식으로 페어명을 가져옴
-    QStringList tokens = pair.split(u'/'); // ["BTC", "/", "KRW"]
+    QStringList tokens = pair.split(u'/'); // ["BTC", "KRW"]
 
     pair = tokens.at(1) + "-" + tokens.at(0); // KRW-BTC
     emit sigLog1(tr("[업비트] 현재 수신중인 종목 코드가 %1로 변경되었습니다.").arg(pair));
     mpThMktUpbit->mCurrentPair = pair;
+
+    QTableWidgetItem *tblAskPrice = ui->tUpbitPrice->item(mNumQuotes-1, 1);
+    QString strAskPrice = tblAskPrice->data(0).toString();
+    tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
+    tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+
+
+    QTableWidgetItem *tblBidPrice = ui->tUpbitPrice->item(mNumQuotes, 1);
+    QString strBidPrice = tblBidPrice->data(0).toString();
+    tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
+    tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
 }
 
 void CDlgMain::slotUpbitTicker(QString imessage)
@@ -323,7 +334,7 @@ void CDlgMain::slotUpbitTicker(QString imessage)
 
 void CDlgMain::slotBinancePairChanged(QListWidgetItem *item) {
     QString pair = item->text();  // BTC/KRW와 같은 형식으로 페어명을 가져옴
-    QStringList tokens = pair.split(u'/'); // ["BTC", "/", "KRW"]
+    QStringList tokens = pair.split(u'/'); // ["BTC", "KRW"]
 
     pair = tokens.at(0).toLower() + tokens.at(1).toLower(); // 예시: btcusdt
 
@@ -331,11 +342,22 @@ void CDlgMain::slotBinancePairChanged(QListWidgetItem *item) {
     mpThMktBinance->setStream(newStream);
     mpThMktBinance->reconnectWS();
     emit sigLog1(tr("[바이낸스] 현재 수신 스트림이 %1로 변경되었습니다.").arg(mpThMktBinance->mStream));
+
+    QTableWidgetItem *tblAskPrice = ui->tBinancePrice->item(mNumQuotes-1, 1);
+    QString strAskPrice = tblAskPrice->data(0).toString();
+    tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
+    tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+
+
+    QTableWidgetItem *tblBidPrice = ui->tBinancePrice->item(mNumQuotes, 1);
+    QString strBidPrice = tblBidPrice->data(0).toString();
+    tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
+    tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
 }
 
 void CDlgMain::slotBinanceFuturesPairChanged(QListWidgetItem *item) {
     QString pair = item->text();  // BTC/KRW와 같은 형식으로 페어명을 가져옴
-    QStringList tokens = pair.split(u'/'); // ["BTC", "/", "KRW"]
+    QStringList tokens = pair.split(u'/'); // ["BTC", "KRW"]
 
     pair = tokens.at(0).toLower() + tokens.at(1).toLower(); // 예시: btcusdt
 
@@ -343,6 +365,17 @@ void CDlgMain::slotBinanceFuturesPairChanged(QListWidgetItem *item) {
     mpThMktBinanceFutures->setStream(newStream);
     mpThMktBinanceFutures->reconnectWS();
     emit sigLog1(tr("[바이낸스 선물] 현재 수신 스트림이 %1로 변경되었습니다.").arg(mpThMktBinance->mStream));
+
+    QTableWidgetItem *tblAskPrice = ui->tBinanceFuturesPrice->item(mNumQuotes-1, 1);
+    QString strAskPrice = tblAskPrice->data(0).toString();
+    tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
+    tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+
+
+    QTableWidgetItem *tblBidPrice = ui->tBinanceFuturesPrice->item(mNumQuotes, 1);
+    QString strBidPrice = tblBidPrice->data(0).toString();
+    tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
+    tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
 }
 
 void CDlgMain::slotBinanceTicker(QString imessage)
@@ -363,24 +396,34 @@ void CDlgMain::slotBinanceTicker(QString imessage)
 
     if(tblAskPrice != nullptr && tblBidPrice != nullptr)
     {
+        // 매도호가가 현재가와 동일한 경우
         if(strAskPrice == strTradePrice)
         {
+            // 매도호가란을 청색 바탕에 흰 글자 처리
             tblAskPrice->setBackground(QBrush(QColor(0, 0, 255)));
             tblAskPrice->setForeground(QBrush(QColor(255, 255, 255)));
+
+            // 매수호가란을 흰색 바탕에 검은 글자 처리
             tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
             tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
         }
 
+        // 매수호가가 현재가와 동일한 경우
         else if(strBidPrice == strTradePrice)
         {
+            // 매도호가란을 흰색 바탕에 검은 글자 처리
             tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
             tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+
+            // 매수호가란을 청색 바탕에 흰 글자 처리
             tblBidPrice->setBackground(QBrush(QColor(0, 0, 255)));
             tblBidPrice->setForeground(QBrush(QColor(255, 255, 255)));
         }
 
+        // 그 외의 칸 (현재가와 같지 않은 매도/매수호가란)
         else
         {
+            // 매도/매수호가란을 각각 흰색 바탕에 검은 글자 처리
             tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
             tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
             tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
@@ -430,4 +473,3 @@ void CDlgMain::slotBinanceFuturesTicker(QString imessage)
         }
     }
 }
-

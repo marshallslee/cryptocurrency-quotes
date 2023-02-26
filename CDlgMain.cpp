@@ -209,10 +209,10 @@ void CDlgMain::slotBinanceFuturesOrderbook(QString imessage)
         auto bid_price = bidData[i][0].toString().toDouble();
         auto bid_size = bidData[i][1].toString().toDouble();
 
-        QString strAskPrice = locale.toString(ask_price, 'f', 2);
-        QString strAskSize = locale.toString(ask_size, 'f', 6);
-        QString strBidPrice = locale.toString(bid_price, 'f', 2);
-        QString strBidSize = locale.toString(bid_size, 'f', 6);
+        QString strAskPrice = locale.toString(ask_price);
+        QString strAskSize = locale.toString(ask_size);
+        QString strBidPrice = locale.toString(bid_price);
+        QString strBidSize = locale.toString(bid_size);
 
         ui->tBinanceFuturesPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColAsk)->setText(strAskSize);
         ui->tBinanceFuturesPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColPrice)->setText(strAskPrice);
@@ -438,7 +438,8 @@ void CDlgMain::slotBinanceFuturesTicker(QString imessage)
     auto tradePrice  = json_doc.object()["data"].toObject()["p"].toString().toDouble();
 
     QLocale locale(QLocale::English);
-    QString strTradePrice = locale.toString(tradePrice, 'f', 2);
+    QString strTradePrice = locale.toString(tradePrice);
+    emit sigLog1(strTradePrice);
 
     QTableWidgetItem *tblAskPrice = ui->tBinanceFuturesPrice->item(mNumQuotes-1, 1);
     QString strAskPrice = tblAskPrice->data(0).toString();

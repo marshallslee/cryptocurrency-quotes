@@ -439,7 +439,6 @@ void CDlgMain::slotBinanceFuturesTicker(QString imessage)
 
     QLocale locale(QLocale::English);
     QString strTradePrice = locale.toString(tradePrice);
-    emit sigLog1(strTradePrice);
 
     QTableWidgetItem *tblAskPrice = ui->tBinanceFuturesPrice->item(mNumQuotes-1, 1);
     QString strAskPrice = tblAskPrice->data(0).toString();

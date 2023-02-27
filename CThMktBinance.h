@@ -63,15 +63,17 @@ public: // WebSocket
     QWebSocket mBinanceWS;
     int64_t mCntObu = 0, mCntTrade = 0, mCntTicker = 0;
     bool mbStartCnt = false;
-    QString mCurrentPair = "btcusdt";
-    QString mStream = tr("%1@depth20@100ms/%2@aggTrade").arg(mCurrentPair).arg(mCurrentPair);
+    QString mCurrentBinancePair = "btcusdt";
+    QString mStream = tr("%1@depth20@100ms/%2@aggTrade").arg(mCurrentBinancePair).arg(mCurrentBinancePair);
 
     void onConnected(void);
     void onDisconnected(void);
     void onTextMessageReceived(QString imessage);
     void onPongReceived(quint64, const QByteArray&);
+    TradingPair_st getPairData(QString);
 
     void setStream(QString);
+    void setCurrentPair(QString);
 };
 
 #endif // CTHMKTBINANCE_H

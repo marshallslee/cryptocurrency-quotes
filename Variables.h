@@ -13,6 +13,8 @@ struct TradingPair_st
     QString base_symbol;
     QString quote_symbol;
     QString orgName;
+    QString tickSize;
+    QString stepSize;
 };
 
 typedef std::unordered_map<QString, TradingPair_st> Pairs_um;

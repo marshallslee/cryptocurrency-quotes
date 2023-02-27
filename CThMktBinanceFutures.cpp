@@ -166,6 +166,23 @@ void CThMktBinanceFutures::getAllBinanceFuturesPairs()
                         for (int32_t i = 0; i < mCountPairs; ++i)
                         {
                             QJsonObject symbolData = sArray1[i].toObject();
+                            QJsonArray arrFilterData = symbolData["filters"].toArray();
+
+                            for (auto data : arrFilterData)
+                            {
+                                QString filterType = data.toObject()["filterType"].toString();
+                                if(filterType == "PRICE_FILTER")
+                                {
+                                    QString tickSize = data.toObject()["tickSize"].toString();
+                                    iPair1.tickSize = tickSize;
+                                }
+                                else if (filterType == "LOT_SIZE")
+                                {
+                                    QString stepSize = data.toObject()["stepSize"].toString();
+                                    iPair1.stepSize = stepSize;
+                                }
+                            }
+
                             iPair1.orgName = symbolData["symbol"].toString().toLower();
                             iPair1.quote_symbol = symbolData["quoteAsset"].toString();
                             if (iPair1.quote_symbol != "USDT")
@@ -194,5 +211,10 @@ void CThMktBinanceFutures::setStream(QString stream)
 {
     mStream = stream;
     mBinanceFuturesWS_Url = "wss://fstream.binance.com/stream?streams=" + mStream;
+}
+
+void CThMktBinanceFutures::setCurrentPair(QString currentPair)
+{
+    mCurrentBinanceFuturesPair = currentPair;
 }
 

@@ -167,6 +167,12 @@ void CThMktBinanceFutures::getAllBinanceFuturesPairs()
                         for (int32_t i = 0; i < mCountPairs; ++i)
                         {
                             QJsonObject symbolData = sArray1[i].toObject();
+                            QString contractType = symbolData["contractType"].toString();
+                            if(contractType != "PERPETUAL")
+                            {
+                                continue;
+                            }
+
                             QJsonArray arrFilterData = symbolData["filters"].toArray();
 
                             for (auto data : arrFilterData)

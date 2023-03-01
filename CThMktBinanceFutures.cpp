@@ -1,4 +1,5 @@
 #include "CThMktBinanceFutures.h"
+#include "Util.h"
 
 using namespace std;
 
@@ -173,12 +174,18 @@ void CThMktBinanceFutures::getAllBinanceFuturesPairs()
                                 QString filterType = data.toObject()["filterType"].toString();
                                 if(filterType == "PRICE_FILTER")
                                 {
-                                    QString tickSize = data.toObject()["tickSize"].toString();
+                                    QString strTickSize = data.toObject()["tickSize"].toString();
+                                    iPair1.strTickSize = strTickSize;
+
+                                    int tickSize = getDigitLength(strTickSize);
                                     iPair1.tickSize = tickSize;
                                 }
                                 else if (filterType == "LOT_SIZE")
                                 {
-                                    QString stepSize = data.toObject()["stepSize"].toString();
+                                    QString strStepSize = data.toObject()["stepSize"].toString();
+                                    iPair1.strStepSize = strStepSize;
+
+                                    int stepSize = getDigitLength(strStepSize);
                                     iPair1.stepSize = stepSize;
                                 }
                             }

@@ -12,6 +12,7 @@ SOURCES += \
     CThMktBinance.cpp \
     CThMktBinanceFutures.cpp \
     CThMktUpbit.cpp \
+    Util.cpp \
     main.cpp \
     CDlgMain.cpp
 
@@ -20,6 +21,7 @@ HEADERS += \
     CThMktBinance.h \
     CThMktBinanceFutures.h \
     CThMktUpbit.h \
+    Util.h \
     Variables.h
 
 FORMS += \

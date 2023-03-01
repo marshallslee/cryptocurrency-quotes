@@ -4,5 +4,6 @@
 #include <QString>
 
 int getDigitLength(QString&);
+int getDigitLength(QString&&);
 
 #endif // UTIL_H

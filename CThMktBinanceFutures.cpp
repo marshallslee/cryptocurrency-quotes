@@ -177,7 +177,7 @@ void CThMktBinanceFutures::getAllBinanceFuturesPairs()
                                     QString strTickSize = data.toObject()["tickSize"].toString();
                                     iPair1.strTickSize = strTickSize;
 
-                                    int tickSize = getDigitLength(strTickSize);
+                                    int tickSize = getDigitLength(std::move(strTickSize));
                                     iPair1.tickSize = tickSize;
                                 }
                                 else if (filterType == "LOT_SIZE")
@@ -185,7 +185,7 @@ void CThMktBinanceFutures::getAllBinanceFuturesPairs()
                                     QString strStepSize = data.toObject()["stepSize"].toString();
                                     iPair1.strStepSize = strStepSize;
 
-                                    int stepSize = getDigitLength(strStepSize);
+                                    int stepSize = getDigitLength(std::move(strStepSize));
                                     iPair1.stepSize = stepSize;
                                 }
                             }

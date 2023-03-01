@@ -1,5 +1,6 @@
 #include "CDlgMain.h"
 #include "ui_CDlgMain.h"
+#include "Variables.h"
 
 using namespace std;
 
@@ -174,6 +175,10 @@ void CDlgMain::slotBinanceOrderbook(QString imessage)
     auto askData = data["asks"].toArray();
     auto bidData = data["bids"].toArray();
 
+    std::unordered_map<QString, TradingPair_st>::iterator symbolData = mpBinancePairs->find(mpThMktBinance->mCurrentBinancePair);
+    int tickSize = symbolData->second.tickSize;
+    int stepSize = symbolData->second.stepSize;
+
     QLocale locale(QLocale::English);
     for(int i=0; i<mNumQuotes; ++i)
     {
@@ -182,10 +187,10 @@ void CDlgMain::slotBinanceOrderbook(QString imessage)
         auto bid_price = bidData[i][0].toString().toDouble();
         auto bid_size = bidData[i][1].toString().toDouble();
 
-        QString strAskPrice = locale.toString(ask_price);
-        QString strAskSize = locale.toString(ask_size);
-        QString strBidPrice = locale.toString(bid_price);
-        QString strBidSize = locale.toString(bid_size);
+        QString strAskPrice = locale.toString(ask_price, 'f', tickSize);
+        QString strAskSize = locale.toString(ask_size, 'f', stepSize);
+        QString strBidPrice = locale.toString(bid_price, 'f', tickSize);
+        QString strBidSize = locale.toString(bid_size, 'f', stepSize);
 
         ui->tBinancePrice->item(mTblRowCount - (i + mNumQuotes + 1), mColAsk)->setText(strAskSize);
         ui->tBinancePrice->item(mTblRowCount - (i + mNumQuotes + 1), mColPrice)->setText(strAskPrice);
@@ -201,6 +206,10 @@ void CDlgMain::slotBinanceFuturesOrderbook(QString imessage)
     auto askData = data["a"].toArray();
     auto bidData = data["b"].toArray();
 
+    std::unordered_map<QString, TradingPair_st>::iterator symbolData = mpBinanceFuturesPairs->find(mpThMktBinanceFutures->mCurrentBinanceFuturesPair);
+    int tickSize = symbolData->second.tickSize;
+    int stepSize = symbolData->second.stepSize;
+
     QLocale locale(QLocale::English);
     for(int i=0; i<mNumQuotes; ++i)
     {
@@ -209,10 +218,10 @@ void CDlgMain::slotBinanceFuturesOrderbook(QString imessage)
         auto bid_price = bidData[i][0].toString().toDouble();
         auto bid_size = bidData[i][1].toString().toDouble();
 
-        QString strAskPrice = locale.toString(ask_price);
-        QString strAskSize = locale.toString(ask_size);
-        QString strBidPrice = locale.toString(bid_price);
-        QString strBidSize = locale.toString(bid_size);
+        QString strAskPrice = locale.toString(ask_price, 'f', tickSize);
+        QString strAskSize = locale.toString(ask_size, 'f', stepSize);
+        QString strBidPrice = locale.toString(bid_price, 'f', tickSize);
+        QString strBidSize = locale.toString(bid_size, 'f', stepSize);
 
         ui->tBinanceFuturesPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColAsk)->setText(strAskSize);
         ui->tBinanceFuturesPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColPrice)->setText(strAskPrice);
@@ -296,7 +305,7 @@ void CDlgMain::slotUpbitTicker(QString imessage)
     QString marketCode = json_doc.object()["cd"].toString();
     QString tradePrice = json_doc.object()["tp"].toVariant().toString();
 
-    emit sigLog1(tr("[업비트] 종목코드: %1, 현재가: %2").arg(marketCode).arg(tradePrice));
+//    emit sigLog1(tr("[업비트] 종목코드: %1, 현재가: %2").arg(marketCode).arg(tradePrice));
 
     QTableWidgetItem *tblAskPrice = ui->tUpbitPrice->item(mNumQuotes-1, 1);
     QString strAskPrice = tblAskPrice->data(0).toString().remove(",");
@@ -386,9 +395,11 @@ void CDlgMain::slotBinanceTicker(QString imessage)
     auto tradePrice  = json_doc.object()["data"].toObject()["p"].toString().toDouble();
 
     auto symbol = json_doc.object()["data"].toObject()["s"].toString().toLower();
+    std::unordered_map<QString, TradingPair_st>::iterator symbolData = mpBinancePairs->find(symbol);
+    int tickSize = symbolData->second.tickSize;
 
     QLocale locale(QLocale::English);
-    QString strTradePrice = locale.toString(tradePrice);
+    QString strTradePrice = locale.toString(tradePrice, 'f', tickSize);
 
     QTableWidgetItem *tblAskPrice = ui->tBinancePrice->item(mNumQuotes-1, 1);
     QString strAskPrice = tblAskPrice->data(0).toString();
@@ -396,7 +407,7 @@ void CDlgMain::slotBinanceTicker(QString imessage)
     QTableWidgetItem *tblBidPrice = ui->tBinancePrice->item(mNumQuotes, 1);
     QString strBidPrice = tblBidPrice->data(0).toString();
 
-    emit sigLog1(tr("[바이낸스] 종목: %1, 현재가: %2, 매도호가: %3, 매수호가: %4").arg(symbol).arg(strTradePrice).arg(strAskPrice).arg(strBidPrice));
+//    emit sigLog1(tr("[바이낸스] 종목: %1, 현재가: %2, 매도호가: %3, 매수호가: %4").arg(symbol).arg(strTradePrice).arg(strAskPrice).arg(strBidPrice));
 
     if(tblAskPrice != nullptr && tblBidPrice != nullptr)
     {
@@ -440,6 +451,10 @@ void CDlgMain::slotBinanceFuturesTicker(QString imessage)
 {
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
     auto tradePrice  = json_doc.object()["data"].toObject()["p"].toString().toDouble();
+
+    auto symbol = json_doc.object()["data"].toObject()["s"].toString().toLower();
+    std::unordered_map<QString, TradingPair_st>::iterator symbolData = mpBinancePairs->find(symbol);
+    int tickSize = symbolData->second.tickSize;
 
     QLocale locale(QLocale::English);
     QString strTradePrice = locale.toString(tradePrice);

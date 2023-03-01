@@ -99,8 +99,8 @@ void CThMktUpbit::slotTimer500mSec(void)
         ++mCountTimer;
         if (mCountTimer % 2 == 0)
         {
-            emit sigLog1(tr("Pairs = %1, Obu = %2, Trd = %3, Tckr = %4")
-                         .arg(mCountPairs).arg(mCntObu).arg(mCntTrade).arg(mCntTicker));
+//            emit sigLog1(tr("Pairs = %1, Obu = %2, Trd = %3, Tckr = %4")
+//                         .arg(mCountPairs).arg(mCntObu).arg(mCntTrade).arg(mCntTicker));
 
             mCountTimer = 0;
         }

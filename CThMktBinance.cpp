@@ -1,5 +1,6 @@
 #include "CThMktBinance.h"
 #include "Util.h"
+#include <unordered_map>
 
 using namespace std;
 
@@ -199,7 +200,7 @@ void CThMktBinance::getAllBinancePairs()
                             }
                             iPair1.base_symbol = symbolData["baseAsset"].toString();
                             iPair1.name = iPair1.base_symbol + tr("/") + iPair1.quote_symbol;
-                            mBinancePairs_um[iPair1.orgName] = iPair1;
+                            mBinancePairs_um.insert({iPair1.orgName, iPair1});
                             ++mSubsPairs;
                         }
                         emit sigLog1(tr("Rcvd BinancePair Counts = %1").arg(mCountPairs));

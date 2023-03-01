@@ -46,7 +46,6 @@ private:
     BinanceFuturesStatus_en mBinanceFuturesStatus = BinanceFuturesStatus_en::Init;
     BinanceFuturesStatus_en GetStatusBinanceFutures(void);
     bool SetStatusBinanceFutures(BinanceFuturesStatus_en iStatus);
-    std::unordered_map<QString, TradingPair_st> mBinanceFuturesPairs_um;
 
     // 바이낸스 API 도메인
     QString mUrlV1 = "https://fapi.binance.com/";
@@ -65,7 +64,7 @@ public: // WebSocket
     QWebSocket mBinanceFuturesWS;
     int64_t mCntObu = 0, mCntTrade = 0, mCntTicker = 0;
     bool mbStartCnt = false;
-
+    std::unordered_map<QString, TradingPair_st> mBinanceFuturesPairs_um;
     QString mCurrentBinanceFuturesPair = "btcusdt";
     QString mStream = tr("%1@depth20@100ms/%2@aggTrade").arg(mCurrentBinanceFuturesPair).arg(mCurrentBinanceFuturesPair);
 

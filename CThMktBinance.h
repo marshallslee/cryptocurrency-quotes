@@ -52,6 +52,7 @@ private:
 
     int32_t mCountPairs = 0;
     int32_t mSubsPairs  = 0;
+    bool mbContinue = true;
 
 private: // Timer
     std::unique_ptr<QTimer> mpTimer;

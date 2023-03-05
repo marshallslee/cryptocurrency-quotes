@@ -24,7 +24,13 @@ CThMktBinanceFutures::CThMktBinanceFutures()
 
 CThMktBinanceFutures::~CThMktBinanceFutures()
 {
+    if (mpTimer->isActive())
+    {
+        mpTimer->stop();
+    }
 
+    mbContinue = false;
+    wait();
 }
 
 BinanceFuturesStatus_en CThMktBinanceFutures::GetStatusBinanceFutures(void)
@@ -74,7 +80,7 @@ void CThMktBinanceFutures::run()
     QObject::connect(this, SIGNAL(sigGetAllBinanceFuturesPairs()), this, SLOT(getAllBinanceFuturesPairs()), Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(sigConnectWS()), this, SLOT(connectWS()), Qt::QueuedConnection);
 
-    while (true)
+    while (mbContinue)
     {
         msleep(1);
         switch (GetStatusBinanceFutures())

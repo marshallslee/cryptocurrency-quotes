@@ -53,6 +53,8 @@ private:
     // 페어 리스트를 불러왔는지 여부를 담는 변수.
     bool mbGotPairList = false;
 
+    bool mbContinue = true;
+
 private: // Timer
     std::unique_ptr<QTimer> mpTimer;
     int32_t mCountTimer = 0;

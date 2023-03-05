@@ -58,6 +58,7 @@ private: // Data Set
 private: // Timer
     std::unique_ptr<QTimer> mpTimer;
     int32_t mCountTimer = 0;
+    bool mbContinue = true;
 
 public: // WebSocket
     QUrl mWS_Url;

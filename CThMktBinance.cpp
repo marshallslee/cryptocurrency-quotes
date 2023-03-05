@@ -25,7 +25,13 @@ CThMktBinance::CThMktBinance()
 
 CThMktBinance::~CThMktBinance()
 {
+    if (mpTimer->isActive())
+    {
+        mpTimer->stop();
+    }
 
+    mbContinue = false;
+    wait();
 }
 
 BinanceStatus_en CThMktBinance::GetStatusBinance(void)
@@ -75,7 +81,7 @@ void CThMktBinance::run()
     QObject::connect(this, SIGNAL(sigGetAllBinancePairs()), this, SLOT(getAllBinancePairs()), Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(sigConnectWS()), this, SLOT(connectWS()), Qt::QueuedConnection);
 
-    while (true)
+    while (mbContinue)
     {
         msleep(1);
         switch (GetStatusBinance())

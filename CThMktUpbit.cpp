@@ -24,7 +24,13 @@ CThMktUpbit::CThMktUpbit()
 
 CThMktUpbit::~CThMktUpbit()
 {
+    if (mpTimer->isActive())
+    {
+        mpTimer->stop();
+    }
 
+    mbContinue = false;
+    wait();
 }
 
 UpbitStatus_en CThMktUpbit::GetStatusUpbit(void)
@@ -64,7 +70,7 @@ void CThMktUpbit::run()
     QObject::connect(this, SIGNAL(sigConnectWS()),
                      this, SLOT(connectWS()), Qt::QueuedConnection);
 
-    while (true)
+    while (mbContinue)
     {
         msleep(1);
         switch (GetStatusUpbit())

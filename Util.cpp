@@ -22,6 +22,11 @@ int getDigitLength(QString& strDecimal)
 
 int getDigitLength(QString&& strDecimal)
 {
+    if(!strDecimal.contains('.'))
+    {
+        return 0;
+    }
+
     std::reverse(strDecimal.begin(), strDecimal.end());
     int digitCountsToSub = 0;
 

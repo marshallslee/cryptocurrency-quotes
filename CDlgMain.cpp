@@ -108,6 +108,22 @@ CDlgMain::CDlgMain(QWidget *parent)
         ui->tBinanceFuturesPrice->setItem(mTblRowCount-(i + mNumQuotes + 1), mColPrice, mpAskPriceItemBinanceFutures + i);
         ui->tBinanceFuturesPrice->setItem(mTblRowCount-(mNumQuotes - i), mColPrice, mpBidPriceItemBinanceFutures + i);
         ui->tBinanceFuturesPrice->setItem(mTblRowCount-(mNumQuotes - i), mColBid, mpBidSizeItemBinanceFutures + i);
+
+        // align items right
+        ui->tUpbitPrice->item(mTblRowCount-(i + mNumQuotes + 1), mColAsk)->setTextAlignment(Qt::AlignRight);
+        ui->tUpbitPrice->item(mTblRowCount-(i + mNumQuotes + 1), mColPrice)->setTextAlignment(Qt::AlignRight);
+        ui->tUpbitPrice->item(mTblRowCount-(mNumQuotes - i), mColPrice)->setTextAlignment(Qt::AlignRight);
+        ui->tUpbitPrice->item(mTblRowCount-(mNumQuotes - i), mColBid)->setTextAlignment(Qt::AlignRight);
+
+        ui->tBinancePrice->item(mTblRowCount-(i + mNumQuotes + 1), mColAsk)->setTextAlignment(Qt::AlignRight);
+        ui->tBinancePrice->item(mTblRowCount-(i + mNumQuotes + 1), mColPrice)->setTextAlignment(Qt::AlignRight);
+        ui->tBinancePrice->item(mTblRowCount-(mNumQuotes - i), mColPrice)->setTextAlignment(Qt::AlignRight);
+        ui->tBinancePrice->item(mTblRowCount-(mNumQuotes - i), mColBid)->setTextAlignment(Qt::AlignRight);
+
+        ui->tBinanceFuturesPrice->item(mTblRowCount-(i + mNumQuotes + 1), mColAsk)->setTextAlignment(Qt::AlignRight);
+        ui->tBinanceFuturesPrice->item(mTblRowCount-(i + mNumQuotes + 1), mColPrice)->setTextAlignment(Qt::AlignRight);
+        ui->tBinanceFuturesPrice->item(mTblRowCount-(mNumQuotes - i), mColPrice)->setTextAlignment(Qt::AlignRight);
+        ui->tBinanceFuturesPrice->item(mTblRowCount-(mNumQuotes - i), mColBid)->setTextAlignment(Qt::AlignRight);
     }
 }
 

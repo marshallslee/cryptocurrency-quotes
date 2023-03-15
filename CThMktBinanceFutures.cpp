@@ -30,7 +30,7 @@ CThMktBinanceFutures::~CThMktBinanceFutures()
     }
 
     mbContinue = false;
-    wait();
+    wait(1000);
 }
 
 BinanceFuturesStatus_en CThMktBinanceFutures::GetStatusBinanceFutures(void)

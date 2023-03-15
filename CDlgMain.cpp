@@ -159,28 +159,34 @@ void CDlgMain::slotUpbitOrderbook(QString price)
 {
     auto json_doc = QJsonDocument::fromJson(price.toUtf8());
 
-    QLocale locale(QLocale::English);
-
-    QJsonArray arr = json_doc.object()["obu"].toArray();
-    for(int i=0; i<arr.size(); ++i)
+    if(mpUpbitPairs != nullptr)
     {
-        QJsonObject tempItem = arr[i].toObject();
-        auto ask_price = tempItem["ap"].toDouble();
-        QString strAskPrice = locale.toString(ask_price, 'f', 0);
+        std::unordered_map<QString, TradingPair_st>::iterator symbolData = mpUpbitPairs->find(mpThMktUpbit->mCurrentUpbitPair);
+        int tickSize = symbolData->second.tickSize;
 
-        auto ask_size = tempItem["as"].toDouble();
-        QString strAskSize = locale.toString(ask_size, 'f', 3);
+        QLocale locale(QLocale::English);
 
-        auto bid_price = tempItem["bp"].toDouble();
-        QString strBidPrice = locale.toString(bid_price, 'f', 0);
+        QJsonArray arr = json_doc.object()["obu"].toArray();
+        for(int i=0; i<arr.size(); ++i)
+        {
+            QJsonObject tempItem = arr[i].toObject();
+            auto ask_price = tempItem["ap"].toDouble();
+            QString strAskPrice = locale.toString(ask_price, 'f', tickSize);
 
-        auto bid_size = tempItem["bs"].toDouble();
-        QString strBidSize = locale.toString(bid_size, 'f', 3);
+            auto ask_size = tempItem["as"].toDouble();
+            QString strAskSize = locale.toString(ask_size, 'f', 3);
 
-        ui->tUpbitPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColAsk)->setText(strAskSize);
-        ui->tUpbitPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColPrice)->setText(strAskPrice);
-        ui->tUpbitPrice->item(mTblRowCount - (mNumQuotes - i), mColPrice)->setText(strBidPrice);
-        ui->tUpbitPrice->item(mTblRowCount - (mNumQuotes - i), mColBid)->setText(strBidSize);
+            auto bid_price = tempItem["bp"].toDouble();
+            QString strBidPrice = locale.toString(bid_price, 'f', tickSize);
+
+            auto bid_size = tempItem["bs"].toDouble();
+            QString strBidSize = locale.toString(bid_size, 'f', 3);
+
+            ui->tUpbitPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColAsk)->setText(strAskSize);
+            ui->tUpbitPrice->item(mTblRowCount - (i + mNumQuotes + 1), mColPrice)->setText(strAskPrice);
+            ui->tUpbitPrice->item(mTblRowCount - (mNumQuotes - i), mColPrice)->setText(strBidPrice);
+            ui->tUpbitPrice->item(mTblRowCount - (mNumQuotes - i), mColBid)->setText(strBidSize);
+        }
     }
 }
 
@@ -307,7 +313,7 @@ void CDlgMain::slotUpbitPairChanged(QListWidgetItem *item) {
 
     pair = tokens.at(1) + "-" + tokens.at(0); // KRW-BTC
     emit sigLog1(tr("[업비트] 현재 수신중인 종목 코드가 %1로 변경되었습니다.").arg(pair));
-    mpThMktUpbit->mCurrentPair = pair;
+    mpThMktUpbit->mCurrentUpbitPair = pair;
 
     QTableWidgetItem *tblAskPrice = ui->tUpbitPrice->item(mNumQuotes-1, 1);
     QString strAskPrice = tblAskPrice->data(0).toString();
@@ -324,41 +330,56 @@ void CDlgMain::slotUpbitPairChanged(QListWidgetItem *item) {
 void CDlgMain::slotUpbitTicker(QString imessage)
 {
     auto json_doc = QJsonDocument::fromJson(imessage.toUtf8());
-    QString marketCode = json_doc.object()["cd"].toString();
-    QString tradePrice = json_doc.object()["tp"].toVariant().toString();
 
-//    emit sigLog1(tr("[업비트] 종목코드: %1, 현재가: %2").arg(marketCode).arg(tradePrice));
-
-    QTableWidgetItem *tblAskPrice = ui->tUpbitPrice->item(mNumQuotes-1, 1);
-    QString strAskPrice = tblAskPrice->data(0).toString().remove(",");
-
-    QTableWidgetItem *tblBidPrice = ui->tUpbitPrice->item(mNumQuotes, 1);
-    QString strBidPrice = tblBidPrice->data(0).toString().remove(",");
-
-    if(tblAskPrice != nullptr && tblBidPrice != nullptr)
+    if(mpUpbitPairs != nullptr)
     {
-        if(strAskPrice == tradePrice)
-        {
-            tblAskPrice->setBackground(QBrush(QColor(0, 0, 255)));
-            tblAskPrice->setForeground(QBrush(QColor(255, 255, 255)));
-            tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
-            tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
-        }
 
-        else if(strBidPrice == tradePrice)
-        {
-            tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
-            tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
-            tblBidPrice->setBackground(QBrush(QColor(0, 0, 255)));
-            tblBidPrice->setForeground(QBrush(QColor(255, 255, 255)));
-        }
+        QString strMarketCode = json_doc.object()["cd"].toString();
+        auto tradePrice = json_doc.object()["tp"].toVariant().toDouble();
 
+        std::unordered_map<QString, TradingPair_st>::iterator symbolData = mpUpbitPairs->find(strMarketCode);
+        int tickSize = symbolData->second.tickSize;
+
+        QLocale locale(QLocale::English);
+        QString strTradePrice = locale.toString(tradePrice, 'f', tickSize);
+
+        QTableWidgetItem *tblAskPrice = ui->tUpbitPrice->item(mNumQuotes-1, 1);
+        QString strAskPrice = tblAskPrice->data(0).toString();
+
+        QTableWidgetItem *tblBidPrice = ui->tUpbitPrice->item(mNumQuotes, 1);
+        QString strBidPrice = tblBidPrice->data(0).toString();
+
+        emit sigLog1(tr("[업비트] 종목코드: %1, 현재가: %2, 매도호가: %3, 매수호가: %4").arg(strMarketCode).arg(strTradePrice).arg(strAskPrice).arg(strBidPrice));
+
+        if(tblAskPrice != nullptr && tblBidPrice != nullptr)
+        {
+            if(strAskPrice == strTradePrice)
+            {
+                tblAskPrice->setBackground(QBrush(QColor(0, 0, 255)));
+                tblAskPrice->setForeground(QBrush(QColor(255, 255, 255)));
+                tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
+                tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
+            }
+
+            else if(strBidPrice == strTradePrice)
+            {
+                tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
+                tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+                tblBidPrice->setBackground(QBrush(QColor(0, 0, 255)));
+                tblBidPrice->setForeground(QBrush(QColor(255, 255, 255)));
+            }
+
+            else
+            {
+                tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
+                tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
+                tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
+                tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
+            }
+        }
         else
         {
-            tblAskPrice->setBackground(QBrush(QColor(255, 255, 255)));
-            tblAskPrice->setForeground(QBrush(QColor(0, 0, 0)));
-            tblBidPrice->setBackground(QBrush(QColor(255, 255, 255)));
-            tblBidPrice->setForeground(QBrush(QColor(0, 0, 0)));
+            emit sigLog1("tblAskPrice or tblBidPrice is nullptr");
         }
     }
 }

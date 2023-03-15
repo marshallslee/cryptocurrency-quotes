@@ -1,4 +1,5 @@
 #include "CThMktUpbit.h"
+#include "Util.h"
 
 using namespace std;
 
@@ -30,7 +31,7 @@ CThMktUpbit::~CThMktUpbit()
     }
 
     mbContinue = false;
-    wait();
+    wait(1000);
 }
 
 UpbitStatus_en CThMktUpbit::GetStatusUpbit(void)
@@ -142,6 +143,28 @@ void CThMktUpbit::getPairAll(void)
                             iPair1.base_symbol = iPair1.orgName.right(iPair1.orgName.length() - iPair1.orgName.indexOf("-") - 1);
                             iPair1.name = iPair1.base_symbol + tr("/") + iPair1.quote_symbol;
 
+                            if(iPair1.quote_symbol == "BTC")
+                            {
+                                QString strTickSize = "0.00000001";
+                                int tickSize = getDigitLength(std::move(strTickSize));
+                                iPair1.tickSize = tickSize;
+                            }
+
+                            else if(iPair1.quote_symbol == "USDT")
+                            {
+                                QString strTickSize = "0.00000001";
+                                int tickSize = getDigitLength(std::move(strTickSize));
+                                iPair1.tickSize = tickSize;
+
+                            }
+
+                            else
+                            {
+                                QString strTickSize = "0";
+                                int tickSize = getDigitLength(std::move(strTickSize));
+                                iPair1.tickSize = tickSize;
+                            }
+
                             mUpbitPairs_um[iPair1.orgName] = iPair1;
                         }
                         emit sigLog1(tr("Rcvd UpbitPair Counts = %1").arg(mCountPairs));
@@ -216,7 +239,7 @@ void CThMktUpbit::onTextMessageReceived(QString imessage)
     QString marketCode = json_doc.object()["cd"].toString();
     QString dataType = json_doc.object()["ty"].toString();
 
-    if(marketCode == mCurrentPair)
+    if(marketCode == mCurrentUpbitPair)
     {
         // 호가 데이터를 수신하는 경우
         if (dataType == "orderbook")

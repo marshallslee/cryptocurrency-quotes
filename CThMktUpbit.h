@@ -73,7 +73,7 @@ public: // WebSocket
 
     QString mUUID;
     QString generateUUID(void);
-    QString mCurrentPair = "KRW-BTC";
+    QString mCurrentUpbitPair = "KRW-BTC";
 };
 
 #endif // CTHMKTUPBIT_H

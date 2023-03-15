@@ -31,7 +31,7 @@ CThMktBinance::~CThMktBinance()
     }
 
     mbContinue = false;
-    wait();
+    wait(1000);
 }
 
 BinanceStatus_en CThMktBinance::GetStatusBinance(void)

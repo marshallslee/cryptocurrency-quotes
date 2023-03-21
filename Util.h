@@ -5,5 +5,6 @@
 
 int getDigitLength(QString&);
 int getDigitLength(QString&&);
+int getDecimalLengthFromPrice(double&);
 
 #endif // UTIL_H

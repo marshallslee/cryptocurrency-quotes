@@ -1,6 +1,7 @@
 #include "CDlgMain.h"
 #include "ui_CDlgMain.h"
 #include "Variables.h"
+#include "Util.h"
 
 using namespace std;
 
@@ -162,7 +163,7 @@ void CDlgMain::slotUpbitOrderbook(QString price)
     if(mpUpbitPairs != nullptr)
     {
         std::unordered_map<QString, TradingPair_st>::iterator symbolData = mpUpbitPairs->find(mpThMktUpbit->mCurrentUpbitPair);
-        int tickSize = symbolData->second.tickSize;
+        int tickSize;
 
         QLocale locale(QLocale::English);
 
@@ -171,13 +172,24 @@ void CDlgMain::slotUpbitOrderbook(QString price)
         {
             QJsonObject tempItem = arr[i].toObject();
             auto ask_price = tempItem["ap"].toDouble();
+            auto bid_price = tempItem["bp"].toDouble();
+
+            // 원화 마켓인 경우
+            if(mCurrentUpbitPair.startsWith("KRW"))
+            {
+                tickSize = getDecimalLengthFromPrice(ask_price);
+            }
+            // 원화 마켓이 아닌 경우
+            else
+            {
+                tickSize = symbolData->second.tickSize;
+            }
+
             QString strAskPrice = locale.toString(ask_price, 'f', tickSize);
+            QString strBidPrice = locale.toString(bid_price, 'f', tickSize);
 
             auto ask_size = tempItem["as"].toDouble();
             QString strAskSize = locale.toString(ask_size, 'f', 3);
-
-            auto bid_price = tempItem["bp"].toDouble();
-            QString strBidPrice = locale.toString(bid_price, 'f', tickSize);
 
             auto bid_size = tempItem["bs"].toDouble();
             QString strBidSize = locale.toString(bid_size, 'f', 3);
@@ -338,10 +350,23 @@ void CDlgMain::slotUpbitTicker(QString imessage)
         auto tradePrice = json_doc.object()["tp"].toVariant().toDouble();
 
         std::unordered_map<QString, TradingPair_st>::iterator symbolData = mpUpbitPairs->find(strMarketCode);
-        int tickSize = symbolData->second.tickSize;
+
+        int tickSize;
+
+        // 원화 마켓인 경우
+        if(mCurrentUpbitPair.startsWith("KRW"))
+        {
+            tickSize = getDecimalLengthFromPrice(tradePrice);
+        }
+        // 원화 마켓이 아닌 경우
+        else
+        {
+            tickSize = symbolData->second.tickSize;
+        }
 
         QLocale locale(QLocale::English);
         QString strTradePrice = locale.toString(tradePrice, 'f', tickSize);
+
 
         QTableWidgetItem *tblAskPrice = ui->tUpbitPrice->item(mNumQuotes-1, 1);
         QString strAskPrice = tblAskPrice->data(0).toString();

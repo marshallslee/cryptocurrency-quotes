@@ -158,13 +158,6 @@ void CThMktUpbit::getPairAll(void)
 
                             }
 
-                            else
-                            {
-                                QString strTickSize = "0";
-                                int tickSize = getDigitLength(std::move(strTickSize));
-                                iPair1.tickSize = tickSize;
-                            }
-
                             mUpbitPairs_um[iPair1.orgName] = iPair1;
                         }
                         emit sigLog1(tr("Rcvd UpbitPair Counts = %1").arg(mCountPairs));
@@ -256,6 +249,7 @@ void CThMktUpbit::onTextMessageReceived(QString imessage)
         else if (dataType == "ticker")
         {
             emit sigUpbitTicker(imessage);
+            emit sigLog1(imessage);
 
             if (imessage.indexOf("ticker") > 0)
             {

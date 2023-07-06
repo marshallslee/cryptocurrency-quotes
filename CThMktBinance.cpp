@@ -1,4 +1,6 @@
 #include "CThMktBinance.h"
+#include "Util.h"
+#include <unordered_map>
 
 using namespace std;
 
@@ -23,7 +25,13 @@ CThMktBinance::CThMktBinance()
 
 CThMktBinance::~CThMktBinance()
 {
+    if (mpTimer->isActive())
+    {
+        mpTimer->stop();
+    }
 
+    mbContinue = false;
+    wait(1000);
 }
 
 BinanceStatus_en CThMktBinance::GetStatusBinance(void)
@@ -73,7 +81,7 @@ void CThMktBinance::run()
     QObject::connect(this, SIGNAL(sigGetAllBinancePairs()), this, SLOT(getAllBinancePairs()), Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(sigConnectWS()), this, SLOT(connectWS()), Qt::QueuedConnection);
 
-    while (true)
+    while (mbContinue)
     {
         msleep(1);
         switch (GetStatusBinance())
@@ -166,15 +174,39 @@ void CThMktBinance::getAllBinancePairs()
                         TradingPair_st iPair1;
                         for (int32_t i = 0; i < mCountPairs; ++i)
                         {
-                            iPair1.orgName = sArray1[i].toObject()["symbol"].toString().toLower();
-                            iPair1.quote_symbol = sArray1[i].toObject()["quoteAsset"].toString();
+                            QJsonObject symbolData = sArray1[i].toObject();
+                            QJsonArray arrFilterData = symbolData["filters"].toArray();
+
+                            for (auto data : arrFilterData)
+                            {
+                                QString filterType = data.toObject()["filterType"].toString();
+                                if(filterType == "PRICE_FILTER")
+                                {
+                                    QString strTickSize = data.toObject()["tickSize"].toString();
+                                    iPair1.strTickSize = strTickSize;
+
+                                    int tickSize = getDigitLength(std::move(strTickSize));
+                                    iPair1.tickSize = tickSize;
+                                }
+                                else if (filterType == "LOT_SIZE")
+                                {
+                                    QString strStepSize = data.toObject()["stepSize"].toString();
+                                    iPair1.strStepSize = strStepSize;
+
+                                    int stepSize = getDigitLength(std::move(strStepSize));
+                                    iPair1.stepSize = stepSize;
+                                }
+                            }
+
+                            iPair1.orgName = symbolData["symbol"].toString().toLower();
+                            iPair1.quote_symbol = symbolData["quoteAsset"].toString();
                             if (iPair1.quote_symbol != "USDT")
                             {
                                 continue;
                             }
-                            iPair1.base_symbol = sArray1[i].toObject()["baseAsset"].toString();
+                            iPair1.base_symbol = symbolData["baseAsset"].toString();
                             iPair1.name = iPair1.base_symbol + tr("/") + iPair1.quote_symbol;
-                            mBinancePairs_um[iPair1.orgName] = iPair1;
+                            mBinancePairs_um.insert({iPair1.orgName, iPair1});
                             ++mSubsPairs;
                         }
                         emit sigLog1(tr("Rcvd BinancePair Counts = %1").arg(mCountPairs));
@@ -194,4 +226,9 @@ void CThMktBinance::setStream(QString stream)
 {
     mStream = stream;
     mBinanceWS_Url = "wss://stream.binance.com:9443/stream?streams=" + mStream;
+}
+
+void CThMktBinance::setCurrentPair(QString currentPair)
+{
+    mCurrentBinancePair = currentPair;
 }

@@ -46,13 +46,14 @@ private:
     BinanceFuturesStatus_en mBinanceFuturesStatus = BinanceFuturesStatus_en::Init;
     BinanceFuturesStatus_en GetStatusBinanceFutures(void);
     bool SetStatusBinanceFutures(BinanceFuturesStatus_en iStatus);
-    std::unordered_map<QString, TradingPair_st> mBinanceFuturesPairs_um;
 
     // 바이낸스 API 도메인
     QString mUrlV1 = "https://fapi.binance.com/";
 
     // 페어 리스트를 불러왔는지 여부를 담는 변수.
     bool mbGotPairList = false;
+
+    bool mbContinue = true;
 
 private: // Timer
     std::unique_ptr<QTimer> mpTimer;
@@ -65,11 +66,12 @@ public: // WebSocket
     QWebSocket mBinanceFuturesWS;
     int64_t mCntObu = 0, mCntTrade = 0, mCntTicker = 0;
     bool mbStartCnt = false;
-
-    QString mCurrentPair = "btcusdt";
-    QString mStream = mCurrentPair + "@depth20@100ms/" + mCurrentPair + "@aggTrade";
+    std::unordered_map<QString, TradingPair_st> mBinanceFuturesPairs_um;
+    QString mCurrentBinanceFuturesPair = "btcusdt";
+    QString mStream = tr("%1@depth20@100ms/%2@aggTrade").arg(mCurrentBinanceFuturesPair).arg(mCurrentBinanceFuturesPair);
 
     void setStream(QString);
+    void setCurrentPair(QString);
 
     void onConnected(void);
     void onDisconnected(void);

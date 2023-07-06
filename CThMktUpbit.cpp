@@ -1,4 +1,5 @@
 #include "CThMktUpbit.h"
+#include "Util.h"
 
 using namespace std;
 
@@ -24,7 +25,13 @@ CThMktUpbit::CThMktUpbit()
 
 CThMktUpbit::~CThMktUpbit()
 {
+    if (mpTimer->isActive())
+    {
+        mpTimer->stop();
+    }
 
+    mbContinue = false;
+    wait(1000);
 }
 
 UpbitStatus_en CThMktUpbit::GetStatusUpbit(void)
@@ -64,7 +71,7 @@ void CThMktUpbit::run()
     QObject::connect(this, SIGNAL(sigConnectWS()),
                      this, SLOT(connectWS()), Qt::QueuedConnection);
 
-    while (true)
+    while (mbContinue)
     {
         msleep(1);
         switch (GetStatusUpbit())
@@ -99,8 +106,8 @@ void CThMktUpbit::slotTimer500mSec(void)
         ++mCountTimer;
         if (mCountTimer % 2 == 0)
         {
-            emit sigLog1(tr("Pairs = %1, Obu = %2, Trd = %3, Tckr = %4")
-                         .arg(mCountPairs).arg(mCntObu).arg(mCntTrade).arg(mCntTicker));
+//            emit sigLog1(tr("Pairs = %1, Obu = %2, Trd = %3, Tckr = %4")
+//                         .arg(mCountPairs).arg(mCntObu).arg(mCntTrade).arg(mCntTicker));
 
             mCountTimer = 0;
         }
@@ -135,6 +142,21 @@ void CThMktUpbit::getPairAll(void)
                             iPair1.quote_symbol = iPair1.orgName.left(iPair1.orgName.indexOf("-"));
                             iPair1.base_symbol = iPair1.orgName.right(iPair1.orgName.length() - iPair1.orgName.indexOf("-") - 1);
                             iPair1.name = iPair1.base_symbol + tr("/") + iPair1.quote_symbol;
+
+                            if(iPair1.quote_symbol == "BTC")
+                            {
+                                QString strTickSize = "0.00000001";
+                                int tickSize = getDigitLength(std::move(strTickSize));
+                                iPair1.tickSize = tickSize;
+                            }
+
+                            else if(iPair1.quote_symbol == "USDT")
+                            {
+                                QString strTickSize = "0.00000001";
+                                int tickSize = getDigitLength(std::move(strTickSize));
+                                iPair1.tickSize = tickSize;
+
+                            }
 
                             mUpbitPairs_um[iPair1.orgName] = iPair1;
                         }
@@ -210,7 +232,7 @@ void CThMktUpbit::onTextMessageReceived(QString imessage)
     QString marketCode = json_doc.object()["cd"].toString();
     QString dataType = json_doc.object()["ty"].toString();
 
-    if(marketCode == mCurrentPair)
+    if(marketCode == mCurrentUpbitPair)
     {
         // 호가 데이터를 수신하는 경우
         if (dataType == "orderbook")
@@ -227,6 +249,7 @@ void CThMktUpbit::onTextMessageReceived(QString imessage)
         else if (dataType == "ticker")
         {
             emit sigUpbitTicker(imessage);
+            emit sigLog1(imessage);
 
             if (imessage.indexOf("ticker") > 0)
             {

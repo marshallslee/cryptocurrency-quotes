@@ -1,4 +1,5 @@
 #include "CThMktBinanceFutures.h"
+#include "Util.h"
 
 using namespace std;
 
@@ -23,7 +24,13 @@ CThMktBinanceFutures::CThMktBinanceFutures()
 
 CThMktBinanceFutures::~CThMktBinanceFutures()
 {
+    if (mpTimer->isActive())
+    {
+        mpTimer->stop();
+    }
 
+    mbContinue = false;
+    wait(1000);
 }
 
 BinanceFuturesStatus_en CThMktBinanceFutures::GetStatusBinanceFutures(void)
@@ -73,7 +80,7 @@ void CThMktBinanceFutures::run()
     QObject::connect(this, SIGNAL(sigGetAllBinanceFuturesPairs()), this, SLOT(getAllBinanceFuturesPairs()), Qt::QueuedConnection);
     QObject::connect(this, SIGNAL(sigConnectWS()), this, SLOT(connectWS()), Qt::QueuedConnection);
 
-    while (true)
+    while (mbContinue)
     {
         msleep(1);
         switch (GetStatusBinanceFutures())
@@ -165,13 +172,43 @@ void CThMktBinanceFutures::getAllBinanceFuturesPairs()
                         TradingPair_st iPair1;
                         for (int32_t i = 0; i < mCountPairs; ++i)
                         {
-                            iPair1.orgName = sArray1[i].toObject()["symbol"].toString().toLower();
-                            iPair1.quote_symbol = sArray1[i].toObject()["quoteAsset"].toString();
+                            QJsonObject symbolData = sArray1[i].toObject();
+                            QString contractType = symbolData["contractType"].toString();
+                            if(contractType != "PERPETUAL")
+                            {
+                                continue;
+                            }
+
+                            QJsonArray arrFilterData = symbolData["filters"].toArray();
+
+                            for (auto data : arrFilterData)
+                            {
+                                QString filterType = data.toObject()["filterType"].toString();
+                                if(filterType == "PRICE_FILTER")
+                                {
+                                    QString strTickSize = data.toObject()["tickSize"].toString();
+                                    iPair1.strTickSize = strTickSize;
+
+                                    int tickSize = getDigitLength(std::move(strTickSize));
+                                    iPair1.tickSize = tickSize;
+                                }
+                                else if (filterType == "LOT_SIZE")
+                                {
+                                    QString strStepSize = data.toObject()["stepSize"].toString();
+                                    iPair1.strStepSize = strStepSize;
+
+                                    int stepSize = getDigitLength(std::move(strStepSize));
+                                    iPair1.stepSize = stepSize;
+                                }
+                            }
+
+                            iPair1.orgName = symbolData["symbol"].toString().toLower();
+                            iPair1.quote_symbol = symbolData["quoteAsset"].toString();
                             if (iPair1.quote_symbol != "USDT")
                             {
                                 continue;
                             }
-                            iPair1.base_symbol = sArray1[i].toObject()["baseAsset"].toString();
+                            iPair1.base_symbol = symbolData["baseAsset"].toString();
                             iPair1.name = iPair1.base_symbol + tr("/") + iPair1.quote_symbol;
                             mBinanceFuturesPairs_um[iPair1.orgName] = iPair1;
                             ++mSubsPairs;
@@ -193,5 +230,10 @@ void CThMktBinanceFutures::setStream(QString stream)
 {
     mStream = stream;
     mBinanceFuturesWS_Url = "wss://fstream.binance.com/stream?streams=" + mStream;
+}
+
+void CThMktBinanceFutures::setCurrentPair(QString currentPair)
+{
+    mCurrentBinanceFuturesPair = currentPair;
 }
 

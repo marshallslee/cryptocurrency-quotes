@@ -58,6 +58,7 @@ private: // Data Set
 private: // Timer
     std::unique_ptr<QTimer> mpTimer;
     int32_t mCountTimer = 0;
+    bool mbContinue = true;
 
 public: // WebSocket
     QUrl mWS_Url;
@@ -72,7 +73,7 @@ public: // WebSocket
 
     QString mUUID;
     QString generateUUID(void);
-    QString mCurrentPair = "KRW-BTC";
+    QString mCurrentUpbitPair = "KRW-BTC";
 };
 
 #endif // CTHMKTUPBIT_H

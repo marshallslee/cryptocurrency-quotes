@@ -82,8 +82,8 @@ public:
     QTableWidgetItem *mpBidPriceItemBinanceFutures;
     QTableWidgetItem *mpBidSizeItemBinanceFutures;
 
-    Pairs_um* mpUpbitPairs;
-    Pairs_um* mpBinancePairs;
-    Pairs_um* mpBinanceFuturesPairs;
+    Pairs_um* mpUpbitPairs = nullptr;
+    Pairs_um* mpBinancePairs = nullptr;
+    Pairs_um* mpBinanceFuturesPairs = nullptr;
 };
 #endif // CDLGMAIN_H

@@ -43,7 +43,6 @@ private:
     BinanceStatus_en mBinanceStatus = BinanceStatus_en::Init;
     BinanceStatus_en GetStatusBinance(void);
     bool SetStatusBinance(BinanceStatus_en iStatus);
-    std::unordered_map<QString, TradingPair_st> mBinancePairs_um;
 
     // 바이낸스 API 도메인
     QString mUrlV1 = "https://api.binance.com/";
@@ -53,6 +52,7 @@ private:
 
     int32_t mCountPairs = 0;
     int32_t mSubsPairs  = 0;
+    bool mbContinue = true;
 
 private: // Timer
     std::unique_ptr<QTimer> mpTimer;
@@ -63,15 +63,18 @@ public: // WebSocket
     QWebSocket mBinanceWS;
     int64_t mCntObu = 0, mCntTrade = 0, mCntTicker = 0;
     bool mbStartCnt = false;
-    QString mCurrentPair = "btcusdt";
-    QString mStream = mCurrentPair + "@depth20@100ms/" + mCurrentPair + "@aggTrade";
+    std::unordered_map<QString, TradingPair_st> mBinancePairs_um;
+    QString mCurrentBinancePair = "btcusdt";
+    QString mStream = tr("%1@depth20@100ms/%2@aggTrade").arg(mCurrentBinancePair).arg(mCurrentBinancePair);
 
     void onConnected(void);
     void onDisconnected(void);
     void onTextMessageReceived(QString imessage);
     void onPongReceived(quint64, const QByteArray&);
+    TradingPair_st getPairData(QString);
 
     void setStream(QString);
+    void setCurrentPair(QString);
 };
 
 #endif // CTHMKTBINANCE_H
